@@ -19,3 +19,35 @@ https://www.analyticsvidhya.com/blog/2019/06/comprehensive-guide-text-summarizat
 
 Wichtige Tools, Datenbanken, Libaries
 https://www.nltk.org/
+
+
+
+1 DEFINE GOAL / PLAN
+* welche Art von Text wollen wir verarbeiten? Paper, Artikel, Fachartikel, ..? Sprache? Corpora? 
+
+2 FIND OPEN DATA FROM 2 SOURCES
+* input single oder multiple documents?
+* https://lionbridge.ai/datasets/the-best-25-datasets-for-natural-language-processing/ / https://arxiv.org/pdf/1810.09305.pdf
+
+
+3 MERGE AND CLEAN DATA
+
+
+
+4 TEST AND VERIFY DATA QUALITY
+* abstractedness (n-grams), compression ratio 
+
+5 DATA PROCESSING (OPTIONAL)
+* tokenizing, stemming, etc. (e.g. youtube tutorials sentdex)
+
+6 APPLY 2 DIFFERENT ALGOS
+* steps: intermediate representation, scoring, selection of summary
+* topic representation vs. indicator representation
+* finde z.B. Graph Methods interessant
+* machine learning (classification problem), e.g. Hidden Markov, Conditional Random Fields // geeignetes Datenset? (labelled data)
+
+
+7 EVALUATE AND VERIFY RESULTS
+* pyrouge packages
+* e.g. F1 score for Rouge-1/-2/-L, METEOR
+
