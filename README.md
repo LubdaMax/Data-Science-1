@@ -5,8 +5,8 @@ Quellen Textanalyse & Zusammenfassung
 
 textanalyse
 Videoreihe zu Textanalyse:
-*https://www.youtube.com/playlist?list=PLQVvvaa0QuDf2JswnfiGkliBInZnIC4HL
-*https://cognitiveclass.ai/courses/systemt
+* https://www.youtube.com/playlist?list=PLQVvvaa0QuDf2JswnfiGkliBInZnIC4HL
+* https://cognitiveclass.ai/courses/systemt
 
 Zusammenfassen
 *https://medium.com/sciforce/towards-automatic-text-summarization-extractive-methods-e8439cd54715
