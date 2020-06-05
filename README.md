@@ -20,7 +20,7 @@ https://www.analyticsvidhya.com/blog/2019/06/comprehensive-guide-text-summarizat
 Wichtige Tools, Datenbanken, Libaries
 https://www.nltk.org/
 
-
+_________________________________________________________
 
 1 DEFINE GOAL / PLAN
 * welche Art von Text wollen wir verarbeiten? Paper, Artikel, Fachartikel, ..? Sprache? Corpora? 
