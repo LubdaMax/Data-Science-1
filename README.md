@@ -1,14 +1,14 @@
 # Data-Science-1
 
 
-Quellen Textanalyse & Zusammenfassung
+## Quellen Textanalyse & Zusammenfassung
 
-textanalyse
+### textanalyse
 Videoreihe zu Textanalyse:
 * https://www.youtube.com/playlist?list=PLQVvvaa0QuDf2JswnfiGkliBInZnIC4HL
 * https://cognitiveclass.ai/courses/systemt
 
-Zusammenfassen
+### Zusammenfassen
 * https://medium.com/sciforce/towards-automatic-text-summarization-extractive-methods-e8439cd54715
 * https://pdfs.semanticscholar.org/7e30/d0c7aaaed7fa2d04fc8cc0fd3af8e24ca385.pdf
 * https://www.sciencedirect.com/topics/computer-science/extractive-summarization
@@ -18,9 +18,12 @@ Zusammenfassen
 * https://www.analyticsvidhya.com/blog/2019/06/comprehensive-guide-text-summarization-using-deep-learning-python/
 * https://shodhganga.inflibnet.ac.in/bitstream/10603/278911/15/15_chapter%205.pdf
 
-Wichtige Tools, Datenbanken, Libaries
+### Wichtige Tools, Datenbanken, Libaries
 * https://www.nltk.org/
 * https://www.tensorflow.org/datasets/catalog/overview
+
+## Datasets
+* https://www.kaggle.com/pariza/bbc-news-summary?
 _________________________________________________________
 
 1 DEFINE GOAL / PLAN
