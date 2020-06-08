@@ -24,6 +24,7 @@ Videoreihe zu Textanalyse:
 
 ## Datasets
 * https://www.kaggle.com/pariza/bbc-news-summary?
+* https://github.com/awesomedata/awesome-public-datasets#naturallanguage
 _________________________________________________________
 
 1 DEFINE GOAL / PLAN
