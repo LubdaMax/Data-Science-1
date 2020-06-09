@@ -26,32 +26,34 @@ Videoreihe zu Textanalyse:
 ## Datasets
 * https://www.kaggle.com/pariza/bbc-news-summary?
 * https://github.com/awesomedata/awesome-public-datasets#naturallanguage
+* https://lionbridge.ai/datasets/the-best-25-datasets-for-natural-language-processing
+* https://arxiv.org/pdf/1810.09305.pdf
 _________________________________________________________
 
 1 DEFINE GOAL / PLAN
 * welche Art von Text wollen wir verarbeiten? Paper, Artikel, Fachartikel, ..? Sprache? Corpora? 
+-> Zeitungsartikel, englisch, verschiedene Themen
 
 2 FIND OPEN DATA FROM 2 SOURCES
 * input single oder multiple documents?
-* https://lionbridge.ai/datasets/the-best-25-datasets-for-natural-language-processing/ / https://arxiv.org/pdf/1810.09305.pdf
+* BBC, CNN, ggf. DUC
 
-
-3 MERGE AND CLEAN DATA
-
+3 MERGE AND CLEAN DATA 
 
 
 4 TEST AND VERIFY DATA QUALITY
+* wie können wir Datenqulität testen?
 * abstractedness (n-grams), compression ratio 
 
 5 DATA PROCESSING (OPTIONAL)
 * tokenizing, stemming, etc. (e.g. youtube tutorials sentdex)
+* labelling von Sätzen
 
 6 APPLY 2 DIFFERENT ALGOS
 * steps: intermediate representation, scoring, selection of summary
 * topic representation vs. indicator representation
-* finde z.B. Graph Methods interessant
 * machine learning (classification problem), e.g. Hidden Markov, Conditional Random Fields // geeignetes Datenset? (labelled data)
-
+* Methode aus package nutzen? (pytextrank)
 
 7 EVALUATE AND VERIFY RESULTS
 * pyrouge packages
