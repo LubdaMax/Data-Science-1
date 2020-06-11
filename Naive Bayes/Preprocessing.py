@@ -39,11 +39,13 @@ for entry in os.scandir(summarypath):
     count += 1
 
 # Add spaces after the dots in the summaries (They are missing in the original summaries)
+# Fixed wrong space placement in quoutes.
 #for i in range(510):
 #    business_data.iloc[i, 1] = re.sub(r"\D\.", ". ", business_data.iloc[i, 1], 0) regex don't work...
 
 for i in range(510):
     business_data.iloc[i, 1] = business_data.iloc[i, 1].replace(".", ". ")
+    business_data.iloc[i, 1] = business_data.iloc[i, 1].replace('. "', '."')
 
 replacement_dict = {"0. ": "0.", "1. ": "1.", "2. ": "2.", "3. ": "3.", "4. ": "4.", "5. ": "5.", "6. ": "6.", "7. ": "7.", "8. ": "8.", "9. ": "9."}
 
@@ -52,11 +54,13 @@ for k in range(510):
         business_data.iloc[k, 1] = business_data.iloc[k, 1].replace(i, j)
 
 # Remove Newline statements from Articles. Special case: first newline is the header which doesn't end with period.
+# Separate Qoutes followed by other qoute
 for i in range(510):
     for j in range(2):
         business_data.iloc[i, j] = re.sub(r"\n\n", ". ", business_data.iloc[i, j], 1)
         business_data.iloc[i, j] = business_data.iloc[i, j].replace("\n\n", " ")
         business_data.iloc[i, j] = business_data.iloc[i, j].replace("\n", " ")
+        business_data.iloc[i, j] = business_data.iloc[i, j].replace('""', '" "')
 
 # Tokenize the data sentence by sentence
 for i in range(510):
@@ -76,6 +80,6 @@ for doc in range(510):
         else:
             subframes["Article{0}".format(doc)].iloc[i, 1] = 0
 
-print(business_data.iloc[0,0], business_data.iloc[0,1])
-print(subframes["Article0"], len(business_data.iloc[0, 0]))
+print(business_data.iloc[42,0], business_data.iloc[42,1])
+print(subframes["Article42"], len(business_data.iloc[42, 0]))
 
