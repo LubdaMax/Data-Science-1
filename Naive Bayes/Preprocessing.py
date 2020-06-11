@@ -50,12 +50,13 @@ replacement_dict = {"0. ": "0.", "1. ": "1.", "2. ": "2.", "3. ": "3.", "4. ": "
 for k in range(510):
     for i, j in replacement_dict.items():
         business_data.iloc[k, 1] = business_data.iloc[k, 1].replace(i, j)
-print(business_data.iloc[0,0], business_data.iloc[0,1])
 
-# Remove Newline statements from Articles
-
-# TO DO!
-
+# Remove Newline statements from Articles. Special case: first newline is the header which doesn't end with period.
+for i in range(510):
+    for j in range(2):
+        business_data.iloc[i, j] = re.sub(r"\n\n", ". ", business_data.iloc[i, j], 1)
+        business_data.iloc[i, j] = business_data.iloc[i, j].replace("\n\n", " ")
+        business_data.iloc[i, j] = business_data.iloc[i, j].replace("\n", " ")
 
 # Tokenize the data sentence by sentence
 for i in range(510):
@@ -75,6 +76,6 @@ for doc in range(510):
         else:
             subframes["Article{0}".format(doc)].iloc[i, 1] = 0
 
-
+print(business_data.iloc[0,0], business_data.iloc[0,1])
 print(subframes["Article0"], len(business_data.iloc[0, 0]))
 
