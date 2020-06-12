@@ -1,14 +1,23 @@
+#import matplotlib.pyplot as plt
+import numpy as np
+#import tensorflow as tf
+import pandas as pd
+import os
 import nltk
+from pathlib import Path
+#import re
+#import tensorflow_datasets as tfds
+
 
 # Initialize the dataframe used to store Articles in col. 0
-index = np.linspace(0, 509,510)
-total_data = pd.DataFrame(columns=["Article"],["Category"], index=index)
+index = np.linspace(0, 509, 510)
+total_data = pd.DataFrame(columns=["Article","Category"], index=index)
 total_data = total_data.fillna(0)
 
 # Relative path of dataset
 rootpath = Path.cwd()
-articlepath_folder = Path.joinpath(rootpath, r"Dataset 1 (BBC)\News Articles\")
-summarypath_folder = Path.joinpath(rootpath, r"Dataset 1 (BBC)\Summaries\")
+articlepath_folder = Path.joinpath(rootpath, r"Dataset 1 (BBC)\News Articles")
+summarypath_folder = Path.joinpath(rootpath, r"Dataset 1 (BBC)\Summaries")
 
 
 
@@ -20,7 +29,7 @@ topics = ["business"]
 
 count = 0
 for topic in topics:
-    articlepath = articlepath_folder + topic
+    articlepath = articlepath_folder + "\\" + topic
     for entry in os.scandir(articlepath):
         text_file = open(entry, "r")
         raw_text = text_file.read()
