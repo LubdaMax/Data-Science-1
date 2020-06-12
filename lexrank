@@ -1,0 +1,18 @@
+LEXRANK
+    * install/ use lexrank, basic (BBC dataset): https://pypi.org/project/lexrank/ 
+    * Erklärung und Code: https://iq.opengenus.org/lexrank-text-summarization/
+    
+    + Considers position and length of sentences
+    
+    # use for -> single document instead of -Multi-document summarization
+    
+    
+    
+TEXTRANK
+        * Code, kurz, mit Methoden: PunktSentenceTokenizer, TfidfTransformer, CountVectorizer
+         // https://joshbohde.com/blog/document-summarization/
+start   * Code, von PageRank zu Textrank, ausführlich, implementiert eigenes similarity measure: 
+         // https://nlpforhackers.io/textrank-text-summarization/
+         * Paper incl. code (not python)
+         // https://www.aaai.org/Papers/JAIR/Vol22/JAIR-2214.pdf
+    
