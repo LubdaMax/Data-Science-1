@@ -1,6 +1,6 @@
 #import matplotlib.pyplot as plt
 import numpy as np
-#import tensorflow as tf
+import tensorflow as tf
 import pandas as pd
 import os
 import nltk
@@ -11,7 +11,7 @@ import re
 from collections import Counter
 
 
-# Initialize the dataframe used to store Articles in col. 0
+# Initialize the dataframe used to store Articles in col. 0         ######## TO DO:  fit Array size to article categories
 index = np.linspace(0, 510, 511)
 total_data = pd.DataFrame(columns=["Article","Category"], index=index)
 total_data = total_data.fillna(0)
@@ -69,6 +69,8 @@ for i in range(510):
 #
 # # #print(total_data.dtypes)
 # print(total_data.iloc[0,0])
+
+
 
 
 def bag_of_words (article):
