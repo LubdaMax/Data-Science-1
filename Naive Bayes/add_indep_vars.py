@@ -10,14 +10,31 @@ import re
 import tensorflow_datasets as tfds
 import pickle
 import string
-
+"""
 infile = open("data_dependent_var",'rb')
 article_dict = pickle.load(infile)
 infile.close()
-
+"""
 # Add position as indep. variable
-for i in range(len(article_dict)):
-    article_dict["Article{0}".format(i)]["pos"] = np.linspace(1, article_dict["Article{0}".format(i)].shape[0], article_dict["Article{0}".format(i)].shape[0])   
+#for i in range(len(article_dict)):
+    #article_dict["Article{0}".format(i)]["pos"] = np.linspace(1, article_dict["Article{0}".format(i)].shape[0], article_dict["Article{0}".format(i)].shape[0])   
+
+def pos(Dataframe):
+    num_sentences = Dataframe.shape[0]
+    Dataframe["pos"] = np.linspace(1, Dataframe.shape[0], Dataframe.shape[0])
+
+    return Dataframe
+
+
+def Relative_pos(Dataframe):
+    Dataframe["rel_pos"] = ""
+    num_sentences = Dataframe.shape[0]
+
+    for s in range(num_sentences):
+        Dataframe["rel_pos"][s] = Dataframe["pos"][s] / num_sentences
+
+    return Dataframe
+
 
 def TF_ISF(Dataframe):
     sentences = Dataframe["Sentence"]
@@ -32,11 +49,11 @@ def TF_ISF(Dataframe):
         #sentences.iloc[sentence, 0] = sentences.iloc[sentence, 0].translate(string.punctuation)
         #sentences.iloc[sentence, 0] = nltk.word_tokenize(sentences.iloc[sentence, 0])
         sentences.iloc[sentence, 0] = tokenizer.tokenize(sentences.iloc[sentence, 0])
-        sentences.iloc[sentence, 0] = [w for w in sentences.iloc[sentence, 0] if not w in stop]
-
-        for i in range(len(sentences.iloc[sentence])):
+        
+        for i in range(len(sentences.iloc[sentence, 0])):
             sentences.iloc[sentence, 0][i] = ps.stem(sentences.iloc[sentence, 0][i].lower())
 
+        sentences.iloc[sentence, 0] = [w for w in sentences.iloc[sentence, 0] if not w in stop]
     #Calculate Term Frequency (within sentence) and Inverse Sentence Frequency
     sentences["TF"] = ""
     sentences["SF"] = ""
@@ -63,20 +80,44 @@ def TF_ISF(Dataframe):
 
             ISF = np.log(num_sentences / SF)
             sentences.iloc[i, 3].append(ISF)
-
-    sentences[]
-    for i in range(num_sentences):
-
-
-    sentences.columns = ["Sentence", "TF", "SF", "ISF"]
-    Dataframe["Sentence"] = sentences["Sentence"]
-    Dataframe["TF"] = sentences["TF"]
-    Dataframe["SF"] = sentences["SF"]
-    Dataframe["ISF"] = sentences["ISF"]
     
+    # Calculate Averge TF-ISF
+    sentences["Avg-TF-ISF"] = ""
+    for s in range(num_sentences):
+        Avg_TF_ISF = 0
+
+        for w in range(len(sentences.iloc[s, 0])):
+            Avg_TF_ISF += sentences.iloc[s, 1][w] * sentences.iloc[s, 3][w] / len(sentences.iloc[s, 0])
+
+        sentences.iloc[s, 4] = Avg_TF_ISF
+
+    sentences.columns = ["Sentence", "TF", "SF", "ISF", "Avg-TF-ISF"]
+    #Dataframe["Sentence"] = sentences["Sentence"]
+    #Dataframe["TF"] = sentences["TF"]
+    #Dataframe["SF"] = sentences["SF"]
+    #Dataframe["ISF"] = sentences["ISF"]
+    Dataframe["Avg-TF-ISF"] = sentences["Avg-TF-ISF"]
+
     return Dataframe
 
-print(article_dict["Article0"])
-test = TF_ISF(article_dict["Article0"])
-print(test)
 
+def add_indep(Dict):
+    for i in range(len(Dict)):
+        Dict["Article{0}".format(i)] = pos(Dict["Article{0}".format(i)])
+        Dict["Article{0}".format(i)] = Relative_pos(Dict["Article{0}".format(i)])
+        Dict["Article{0}".format(i)] = TF_ISF(Dict["Article{0}".format(i)])
+    return(Dict)
+
+
+def pickle_save(Dict):
+    outfile = open("data_indep_3", 'wb')
+    pickle.dump(Dict, outfile)
+    outfile.close()
+"""
+add_indep(article_dict)
+pickle_save(article_dict)
+"""
+
+testopen = open("data_indep_3", 'rb')
+idep_dict = pickle.load(testopen)
+print(idep_dict["Article200"])
