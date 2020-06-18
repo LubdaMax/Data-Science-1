@@ -10,17 +10,13 @@ import re
 import tensorflow_datasets as tfds
 import pickle
 import string
-"""
+
 infile = open("data_dependent_var",'rb')
 article_dict = pickle.load(infile)
 infile.close()
-"""
-# Add position as indep. variable
-#for i in range(len(article_dict)):
-    #article_dict["Article{0}".format(i)]["pos"] = np.linspace(1, article_dict["Article{0}".format(i)].shape[0], article_dict["Article{0}".format(i)].shape[0])   
+
 
 def pos(Dataframe):
-    num_sentences = Dataframe.shape[0]
     Dataframe["pos"] = np.linspace(1, Dataframe.shape[0], Dataframe.shape[0])
 
     return Dataframe
@@ -101,6 +97,26 @@ def TF_ISF(Dataframe):
     return Dataframe
 
 
+def rel_s_lenght(Dataframe): 
+    Dataframe["rel_len"] = ""
+    num_sentences = Dataframe.shape[0]
+    max_words = 0
+
+    for s in range(num_sentences):
+        if len(Dataframe.iloc[s, 0]) > max_words:
+            max_words = len(Dataframe.iloc[s, 0])
+    
+    for s in range(num_sentences):
+        Dataframe["rel_len"][s] = len(Dataframe.iloc[s, 0]) / max_words
+
+    return Dataframe
+
+
+def s2s_coherence(Dataframe):
+    Dataframe["s2s_coherence"] = ""
+    
+
+
 def add_indep(Dict):
     for i in range(len(Dict)):
         Dict["Article{0}".format(i)] = pos(Dict["Article{0}".format(i)])
@@ -113,11 +129,15 @@ def pickle_save(Dict):
     outfile = open("data_indep_3", 'wb')
     pickle.dump(Dict, outfile)
     outfile.close()
+
+test = rel_s_lenght(article_dict["Article0"])
+print(test)
 """
 add_indep(article_dict)
 pickle_save(article_dict)
-"""
+
 
 testopen = open("data_indep_3", 'rb')
 idep_dict = pickle.load(testopen)
 print(idep_dict["Article200"])
+"""
