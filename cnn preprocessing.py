@@ -27,8 +27,8 @@ rootpath = Path.cwd()
 cnn_path = Path.joinpath(rootpath, r"CNN")
 
 index = np.linspace(0, 999, 1000)
-cnn_data = pd.DataFrame(columns=["filename","text_raw", "text_prep", "summary"], index = index)
-cnn_data = cnn_data.fillna(0)
+cnn_data = pd.DataFrame(columns=["filename","text_raw", "text_prep", "summary"], index = index.astype(int))
+cnn_data = cnn_data.fillna("nan")
 
 count = 0
 for entry in os.scandir(cnn_path):
@@ -40,8 +40,9 @@ for entry in os.scandir(cnn_path):
 
     count += 1
 
-print(cnn_data.iloc[0, 1])
-for i in range(999):
+#print(cnn_data.iloc[0, 1])
+#cnn_data = cnn_data.dropna()
+for i in range(cnn_data.shape[0]):
     cnn_data.iloc[i,2] = re.sub("\n\n",". ",cnn_data.iloc[i,1]) ##remove new line symbol
     cnn_data.iloc[i,2] = cnn_data.iloc[i,2].replace("..",".")
     cnn_data.iloc[i,2] = nltk.sent_tokenize(cnn_data.iloc[i, 2])
@@ -52,12 +53,12 @@ for i in range(999):
 
     count = 0
     summary = []
-    extract summary from text
+    #extract summary from text
     for sentence in cnn_data.iloc[i, 2]:
-        print(sentence)
+        #print(sentence)
         if sentence == "@highlight.":
             for j in range (count,len(cnn_data.iloc[i, 2])-1):
-                print(summary)
+                #print(summary)
                 summary.append(cnn_data.iloc[i, 2][j])
         break
 
@@ -74,7 +75,7 @@ for i in range(999):
 
 
 
-#print(cnn_data)
+print(cnn_data.head(10))
 #print(cnn_data.iloc[4,1])
 #print(cnn_data.iloc[4,2])
 #print(cnn_data)
