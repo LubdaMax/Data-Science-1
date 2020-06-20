@@ -40,33 +40,43 @@ for entry in os.scandir(cnn_path):
 
     count += 1
 
+print(cnn_data.iloc[0, 1])
 for i in range(999):
     cnn_data.iloc[i,2] = re.sub("\n\n",". ",cnn_data.iloc[i,1]) ##remove new line symbol
     cnn_data.iloc[i,2] = cnn_data.iloc[i,2].replace("..",".")
-    # if (cnn_data.iloc[i, 1] == ""):
-    #     cnn_data = cnn_data.drop([i], axis=0)
-    # cnn_data.astype(str)
-    cnn_data.iloc[i, 2] = nltk.sent_tokenize(cnn_data.iloc[i, 2])
+    cnn_data.iloc[i,2] = nltk.sent_tokenize(cnn_data.iloc[i, 2])
     cnn_data.iloc[i, 2][0] = re.sub('^.*?-- ',"",cnn_data.iloc[i, 2][0]) #removes: (CNN) --
+
+
+## ab hier noch nicht getestet
 
     count = 0
     summary = []
-    # extract summary from text
+    extract summary from text
     for sentence in cnn_data.iloc[i, 2]:
         print(sentence)
-        # if sentence == "@highlight.":
-        #     for j in range (count,len(cnn_data.iloc[i, 2])-1):
-        #         print(summary)
-        #         summary.append(cnn_data.iloc[i, 2][j])
-        # break
+        if sentence == "@highlight.":
+            for j in range (count,len(cnn_data.iloc[i, 2])-1):
+                print(summary)
+                summary.append(cnn_data.iloc[i, 2][j])
+        break
 
         count += 1
 
 
 
+cnn_article_dict = {}
+
+for i in range(999):
+    key = "Article" + str(i)
+    cnn_article_dict[key] = pd.DataFrame(cnn_data.iloc[i,2])
+
+
+
+
 #print(cnn_data)
-print(cnn_data.iloc[4,1])
-print(cnn_data.iloc[4,2])
+#print(cnn_data.iloc[4,1])
+#print(cnn_data.iloc[4,2])
 #print(cnn_data)
 #print(cnn_data.iloc[1,1])
 #print(cnn_data.iloc[1,1][0])
