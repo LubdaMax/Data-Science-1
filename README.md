@@ -18,6 +18,7 @@ Videoreihe zu Textanalyse:
 * https://www.analyticsvidhya.com/blog/2019/06/comprehensive-guide-text-summarization-using-deep-learning-python/
 * https://shodhganga.inflibnet.ac.in/bitstream/10603/278911/15/15_chapter%205.pdf
 * https://link.springer.com/content/pdf/10.1007%2F3-540-36127-8.pdf
+* http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.43.4634
 
 ### Wichtige Tools, Datenbanken, Libaries
 * https://www.nltk.org/
