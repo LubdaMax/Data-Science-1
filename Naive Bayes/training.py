@@ -1,13 +1,10 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow as tf
 import pandas as pd
 import os
 import nltk
 from nltk.corpus import stopwords
 from pathlib import Path
 import re
-import tensorflow_datasets as tfds
 import pickle
 import string
 import sklearn
@@ -16,24 +13,30 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 
-openfile = open("data_indep_3", 'rb')
+rootpath = Path.cwd()
+openfile = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_4"), 'rb')
 articles = pickle.load(openfile)
 openfile.close()
 
 def create_frame(Dict):
-    X = pd.DataFrame(columns=["rel_pos", "Avg-TF-ISF"], dtype=float)
+    X = pd.DataFrame(columns=["rel_pos", "Avg-TF-ISF", "rel_len"], dtype=float)
     Y = pd.Series(dtype=int)
 
     for i in range(len(Dict)):
-        indep_vars = Dict["Article{0}".format(i)].iloc[:, [3, 4]]
+        indep_vars = Dict["Article{0}".format(i)].iloc[:, [3, 4, 5]]
         dep_vars = Dict["Article{0}".format(i)].in_Summary
         X = X.append(indep_vars, ignore_index=True)
         Y = Y.append(dep_vars, ignore_index=True)
     Y = Y.astype("int")
+    
     return X, Y
 
 X, Y = create_frame(articles)
 #print(X.head(), Y.head(), X.shape, Y.shape)
+
+for i in X["rel_len"]:
+    if type(i) == str:
+        print("x" +i+"x")
 
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, Y, test_size=0.2)
 

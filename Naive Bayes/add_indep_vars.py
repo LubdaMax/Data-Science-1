@@ -1,17 +1,16 @@
-import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow as tf
 import pandas as pd
 import os
 import nltk
 from nltk.corpus import stopwords
 from pathlib import Path
 import re
-import tensorflow_datasets as tfds
 import pickle
 import string
-
-infile = open("data_dependent_var",'rb')
+"""
+rootpath = Path.cwd()
+filename = Path.joinpath(rootpath, r"Wikihow\partial_data_processed")
+infile = open(filename,'rb')
 article_dict = pickle.load(infile)
 infile.close()
 
@@ -27,13 +26,13 @@ def Relative_pos(Dataframe):
     num_sentences = Dataframe.shape[0]
 
     for s in range(num_sentences):
-        Dataframe["rel_pos"][s] = Dataframe["pos"][s] / num_sentences
+        Dataframe.iloc[s, 3]= Dataframe.iloc[s, 2]/ num_sentences
 
     return Dataframe
 
 
 def TF_ISF(Dataframe):
-    sentences = Dataframe["Sentence"]
+    sentences = Dataframe["sentence"]
     sentences = sentences.to_frame()
     ps = nltk.stem.PorterStemmer()
     stop = set(stopwords.words("english"))
@@ -87,7 +86,7 @@ def TF_ISF(Dataframe):
 
         sentences.iloc[s, 4] = Avg_TF_ISF
 
-    sentences.columns = ["Sentence", "TF", "SF", "ISF", "Avg-TF-ISF"]
+    sentences.columns = ["sentence", "TF", "SF", "ISF", "Avg-TF-ISF"]
     #Dataframe["Sentence"] = sentences["Sentence"]
     #Dataframe["TF"] = sentences["TF"]
     #Dataframe["SF"] = sentences["SF"]
@@ -107,7 +106,7 @@ def rel_s_lenght(Dataframe):
             max_words = len(Dataframe.iloc[s, 0])
     
     for s in range(num_sentences):
-        Dataframe["rel_len"][s] = len(Dataframe.iloc[s, 0]) / max_words
+        Dataframe.iloc[s, 5] = len(Dataframe.iloc[s, 0]) / max_words
 
     return Dataframe
 
@@ -122,22 +121,31 @@ def add_indep(Dict):
         Dict["Article{0}".format(i)] = pos(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = Relative_pos(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = TF_ISF(Dict["Article{0}".format(i)])
+        Dict["Article{0}".format(i)] = rel_s_lenght(Dict["Article{0}".format(i)])
     return(Dict)
 
 
 def pickle_save(Dict):
-    outfile = open("data_indep_3", 'wb')
+    rootpath = Path.cwd()
+    outfile = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_4"), 'wb')
     pickle.dump(Dict, outfile)
     outfile.close()
 
+
+
+test = pos(article_dict["Article0"])
+test = Relative_pos(article_dict["Article0"])
+test = TF_ISF(article_dict["Article0"])
 test = rel_s_lenght(article_dict["Article0"])
 print(test)
-"""
+
+
+
 add_indep(article_dict)
 pickle_save(article_dict)
 
-
-testopen = open("data_indep_3", 'rb')
+"""
+rootpath = Path.cwd()
+testopen = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_4"), 'rb')
 idep_dict = pickle.load(testopen)
 print(idep_dict["Article200"])
-"""
