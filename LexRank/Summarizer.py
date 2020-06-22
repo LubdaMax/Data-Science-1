@@ -32,13 +32,6 @@ summaries = pickle.load(openfile)
 openfile.close()
 
 
-# settings
-desired_width=320
-pd.set_option('display.width', desired_width)
-np.set_printoptions(linewidth=desired_width)
-pd.set_option('display.max_columns',10)
-
-
 
 def remove_punctuation(text):
     """
@@ -115,8 +108,6 @@ def apply_stemming(text):
     return text
 
 
-
-
 # Remove punctuation, stop words, convert everything to lowercase, apply Lemmatization or Stemming
 for article in data.keys():
     data[article][1] = 0
@@ -134,7 +125,7 @@ def bag_of_words(article):
         words = word_tokenize(article.iloc[sentence, 1])
         for w in words:
             if w not in word_frequency.keys():
-              word_frequency[w] = 1
+                word_frequency[w] = 1
             else:
                 word_frequency[w] += 1
     #word_frequency_sorted = OrderedDict(sorted(word_frequency.items(), key=lambda x: x[1], reverse=True))
@@ -164,18 +155,17 @@ def vector_representation(article,word_frequency):
 
 def graph_representation (vector_representation):
     """"generates similarity graph"""
-
-     matrix = pd.DataFrame(vector_representation)
+    matrix = pd.DataFrame(vector_representation)
     #normalize matrix
-    normalized_matrix = TfidfTransformer().fit_transform(matrix_representation)
+    normalized_matrix = TfidfTransformer().fit_transform(matrix)
     similarity_graph = normalized_matrix * normalized_matrix.T
     #similarity_graph = similarity_graph.toarray()
 
     return similarity_graph
 
 def pagerank (similarity_graph):
-    """"applies PageRank, TextRank, LexRank"""
-    #pagerank
+    """"
+        """
     pagerank_graph = nx.from_scipy_sparse_matrix(similarity_graph)
     scores = nx.pagerank(pagerank_graph)
     scores_sorted = sorted(scores.items(), key=lambda x: x[1], reverse=True)    #Ausgabe als Liste mit Tupels
@@ -186,18 +176,37 @@ def pagerank (similarity_graph):
 article_frequency_dict = {}
 article_vector_dict = {}
 ranking_dict = {}
+cnnTRoutput_summ_dict = {}
 count = 0
-for article in data.keys():
-    key = "Article" + str(count)
-    article_frequency_dict[key] = bag_of_words(data[article])
-    article_vector_dict[key] = vector_representation(data[article], article_frequency_dict[key])
+
+#print(data["Article0"])
+#print(data.keys())
+for key in data.keys():
+    #print(article)
+    keyS = "Summary" + str(count)
+    article_frequency_dict[key] = bag_of_words(data[key])
+    #print(article_frequency_dict[key])
+    article_vector_dict[key] = vector_representation(data[key][1], article_frequency_dict[key])
+    #print(data[key][1])
+    #print(vector_representation(data[key][1], article_frequency_dict[key]))
     ranking_dict[key] = pagerank((graph_representation(article_vector_dict[key])))
+    #print(graph_representation(article_vector_dict[key]))
 
-    for i in range(len(summaries[key])):
-        s = ranking_dict[key][i]
-        output_summary.append(data[article].iloc[s, 0])
-    ##output datenstruktur?
+    output_summary = []
+    for i in range(summaries[keyS].shape[0]):
+        s = ranking_dict[key][i][0]
+        output_summary.append(data[key].iloc[s, 0])
 
+    cnnTRoutput_summ_dict[keyS] = pd.DataFrame(output_summary)
+    count += count
+
+
+
+
+# filename = r"cnnTRoutput_summ_dict"
+# outfile = open(Path.joinpath(rootpath, filename), 'wb')
+# pickle.dump(cnnTRoutput_summ_dict, outfile)
+# outfile.close()
 
 
 
