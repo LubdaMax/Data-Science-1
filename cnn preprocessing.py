@@ -29,6 +29,8 @@ index = np.linspace(0, 999, 1000)
 cnn_data = pd.DataFrame(columns=["filename","text_raw", "text_prep", "summary"], index = index.astype(int))
 cnn_data = cnn_data.fillna("nan")
 
+
+
 count = 0
 for entry in os.scandir(cnn_path):
     text_file = open(entry, "r", encoding="utf8")
@@ -52,14 +54,18 @@ for entry in os.scandir(cnn_path):
 
 
 not_cnn = []
+empty = []
 
 for i in range(cnn_data.shape[0]):
-    cnn_data.iloc[i,2] = re.sub("\n\n",". ",cnn_data.iloc[i,1]) ##remove new line symbol
-    cnn_data.iloc[i,2] = cnn_data.iloc[i,2].replace("..",".")
+    cnn_data.iloc[i, 2] = re.sub("\n\n",". ",cnn_data.iloc[i,1]) ##remove new line symbol
+    cnn_data.iloc[i, 2] = cnn_data.iloc[i, 2].replace("..",".")
+    cnn_data.iloc[i, 2] = nltk.sent_tokenize(cnn_data.iloc[i, 2])
+    if cnn_data.iloc[i, 2] != []:
+        cnn_data.iloc[i, 2][0] = re.sub('^.*?-- ',"",cnn_data.iloc[i, 2][0]) #removes: (CNN) --
+        cnn_data.iloc[i, 2][0] = re.sub('^.*?\(CNN\)', "", cnn_data.iloc[i, 2][0])  # removes: (CNN)
+    else:
+        empty.append(i)
 
-    cnn_data.iloc[i,2] = nltk.sent_tokenize(cnn_data.iloc[i, 2])
-    cnn_data.iloc[i, 2][0] = re.sub('^.*?-- ',"",cnn_data.iloc[i, 2][0]) #removes: (CNN) --
-    cnn_data.iloc[i, 2][0] = re.sub('^.*?\(CNN\)', "", cnn_data.iloc[i, 2][0])  # removes: (CNN)
 
     #print(cnn_data.iloc[i, 2])
 
@@ -91,16 +97,20 @@ for i in range(cnn_data.shape[0]):
     # print('article ', cnn_data.iloc[i, 2])
 
 
-    if "(CNN)" not in (cnn_data.iloc[i,1]):
+    if "(CNN)" not in (cnn_data.iloc[i,1]) and i not in empty:
         not_cnn.append(i)
 
-print(cnn_data)
+#print(cnn_data)
 
 
-##?? drop articles that are potentially from other sources
-for i in not_cnn:
-    print(cnn_data.iloc[i,2])
+##?? drop articles that are potentially from other sources // drop articles with no content
+#for i in not_cnn:
+    #print("not CNN?: ", cnn_data.iloc[i,2])
+#for i in empty:
+    #print("empty?: ", cnn_data.iloc[i,2])
+
 cnn_data.drop(cnn_data.index[not_cnn], inplace=True)
+cnn_data.drop(cnn_data.index[empty], inplace=True)
 #cnn_data.reindex
 
 
@@ -121,6 +131,30 @@ for i in range(cnn_data.shape[0]):
 
 
 
+# exploratory data analysis
+count = 0
+sentences_per_article = []
+words_per_article = []
+for article in cnn_article_dict.keys():
+    sentences_per_article.append(cnn_article_dict[article].shape[0])
+
+sentences_total_number = sum(sentences_per_article)
+
+
+
+# sentences/ article on average
+print("average of sentences per article: ",sentences_total_number/len(sentences_per_article))
+
+# words/ sentence on average
+print("average of words per sentence: ")
+
+# sentences/ summary on average
+
+
+# words/ summary on average
+
+
+# save outputs
 filename = r"cnn_articles_dict"
 outfile = open(Path.joinpath(rootpath, filename), 'wb')
 pickle.dump(cnn_article_dict, outfile)
