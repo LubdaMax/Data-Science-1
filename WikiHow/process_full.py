@@ -53,9 +53,9 @@ while True:
         article.append(title)
         in_summary.append(0)
 
-        for s in overview:
-            article.append(s)
-            in_summary.append(0)
+        #for s in overview:
+            #article.append(s)
+            #in_summary.append(0)
 
         article.append(headline[0])
         in_summary.append(1)
@@ -99,7 +99,7 @@ for i in range(len(Article_dict)):
     for j in range(Article_dict["Article{0}".format(i)].shape[0]):
         Article_dict["Article{0}".format(i)].iloc[j, 0] = Article_dict["Article{0}".format(i)].iloc[j, 0].strip("\n")
 
-filename = r"Wikihow\partial_data_processed"
+filename = r"Wikihow\partial_data_processed_no_overview"
 outfile = open(Path.joinpath(rootpath, filename) , 'wb')
 pickle.dump(Article_dict, outfile)
 outfile.close()

@@ -7,9 +7,9 @@ from pathlib import Path
 import re
 import pickle
 import string
-"""
+
 rootpath = Path.cwd()
-filename = Path.joinpath(rootpath, r"Wikihow\partial_data_processed")
+filename = Path.joinpath(rootpath, r"Wikihow\partial_data_processed_no_overview")
 infile = open(filename,'rb')
 article_dict = pickle.load(infile)
 infile.close()
@@ -127,7 +127,7 @@ def add_indep(Dict):
 
 def pickle_save(Dict):
     rootpath = Path.cwd()
-    outfile = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_4"), 'wb')
+    outfile = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_4_no_overview"), 'wb')
     pickle.dump(Dict, outfile)
     outfile.close()
 
@@ -144,8 +144,8 @@ print(test)
 add_indep(article_dict)
 pickle_save(article_dict)
 
-"""
+
 rootpath = Path.cwd()
-testopen = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_4"), 'rb')
+testopen = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_4_no_overview"), 'rb')
 idep_dict = pickle.load(testopen)
 print(idep_dict["Article200"])
