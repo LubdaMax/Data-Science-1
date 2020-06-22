@@ -25,7 +25,7 @@ data = pickle.load(openfile)
 openfile.close()
 
 # unpickle preprocessed data (summaries)
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
+#os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
 rootpath = Path.cwd()
 openfile = open(Path.joinpath(rootpath, r"cnn_summaries_dict"), 'rb')
 summaries = pickle.load(openfile)
