@@ -14,16 +14,16 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression
 
 rootpath = Path.cwd()
-openfile = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_4"), 'rb')
+openfile = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_4_no_overview"), 'rb')
 articles = pickle.load(openfile)
 openfile.close()
 
 def create_frame(Dict):
-    X = pd.DataFrame(columns=["rel_pos", "Avg-TF-ISF", "rel_len"], dtype=float)
+    X = pd.DataFrame(columns=["pos", "rel_pos", "Avg-TF-ISF", "rel_len"], dtype=float)
     Y = pd.Series(dtype=int)
 
     for i in range(len(Dict)):
-        indep_vars = Dict["Article{0}".format(i)].iloc[:, [3, 4, 5]]
+        indep_vars = Dict["Article{0}".format(i)].iloc[:, [2, 3, 4, 5]]
         dep_vars = Dict["Article{0}".format(i)].in_Summary
         X = X.append(indep_vars, ignore_index=True)
         Y = Y.append(dep_vars, ignore_index=True)
@@ -32,11 +32,8 @@ def create_frame(Dict):
     return X, Y
 
 X, Y = create_frame(articles)
-#print(X.head(), Y.head(), X.shape, Y.shape)
+print(X.head(), Y.head(), X.shape, Y.shape)
 
-for i in X["rel_len"]:
-    if type(i) == str:
-        print("x" +i+"x")
 
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, Y, test_size=0.2)
 
@@ -61,3 +58,9 @@ Logisitc_y_pred = Logisitc.predict(x_test)
 Logisitc_acc = sklearn.metrics.accuracy_score(y_test, Logisitc_y_pred)
 
 print("Bern acc: ", BernNB_acc, "\nMulti acc: ", MultiNB_acc, "\nGauss acc: ", GaussiNB_acc, "\nLogisctic acc: ", Logisitc_acc)
+print(sum(BernNB_y_pred)/len(BernNB_y_pred), sum(MultiNB_y_pred) / len(MultiNB_y_pred), sum(GaussiNB_y_pred) /len(GaussiNB_y_pred), sum(Logisitc_y_pred) / len(Logisitc_y_pred))
+print(Y.sum() / Y.shape)
+
+outfile = open(Path.joinpath(rootpath, r"Gauss_trained_4_no_overview"), 'wb')
+articles = pickle.dump(GaussiNB, outfile)
+outfile.close()
