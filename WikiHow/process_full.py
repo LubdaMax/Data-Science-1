@@ -98,10 +98,36 @@ for i in range(len(Article_dict)):
     Article_dict["Article{0}".format(i)].iloc[0, 0] = Article_dict["Article{0}".format(i)].iloc[0, 0] 
     for j in range(Article_dict["Article{0}".format(i)].shape[0]):
         Article_dict["Article{0}".format(i)].iloc[j, 0] = Article_dict["Article{0}".format(i)].iloc[j, 0].strip("\n")
-
+"""        
+print(len(Article_dict))
+for i in range(len(Article_dict)):
+    article = Article_dict["Article{0}".format(i)]
+    summary_percentage = sum(article.iloc[:, 1]) / article.shape[0]
+    if summary_percentage > 0.75:
+        print(Article_dict["Article{0}".format(i)])
+        del Article_dict["Article{0}".format(i)]
+print(len(Article_dict))
+"""
 filename = r"Wikihow\partial_data_processed_no_overview"
 outfile = open(Path.joinpath(rootpath, filename) , 'wb')
 pickle.dump(Article_dict, outfile)
 outfile.close()
 
-print(len(Article_dict))
+Summary_dict = {}
+for i in range(len(Article_dict)):
+    summary = ""
+    article = Article_dict["Article{0}".format(i)]
+    for s in range(article.shape[0]):
+        if article.iloc[s, 1] == 1:
+            summary += article.iloc[s, 0]
+            summary += " "
+    summary = summary[:-1]
+    Summary_dict["Summary{0}".format(i)] = summary
+
+        
+summary_name = r"Wikihow\wiki_partial_summaries"
+summary_file = open(Path.joinpath(rootpath, summary_name), 'wb')
+pickle.dump(Summary_dict, summary_file)
+summary_file.close()
+
+print(Summary_dict["Summary3"])
