@@ -203,10 +203,10 @@ for key in data.keys():
 
 
 
-# filename = r"cnnTRoutput_summ_dict"
-# outfile = open(Path.joinpath(rootpath, filename), 'wb')
-# pickle.dump(cnnTRoutput_summ_dict, outfile)
-# outfile.close()
+filename = r"cnnTRoutput_summ_dict"
+outfile = open(Path.joinpath(rootpath, filename), 'wb')
+pickle.dump(cnnTRoutput_summ_dict, outfile)
+outfile.close()
 
 
 
