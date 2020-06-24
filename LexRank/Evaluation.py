@@ -29,26 +29,16 @@ openfile = open(Path.joinpath(rootpath, r"cnn_TRoutput_ranking_dict"), 'rb')
 cnn_TRoutput_ranking_dict = pickle.load(openfile)
 openfile.close()
 
-openfile = open(Path.joinpath(rootpath, r"cnn_dataframe, 'rb')
+openfile = open(Path.joinpath(rootpath, r"cnn_dataframe"), 'rb')
 cnn_data = pickle.load(openfile)
 openfile.close()
 
 
-
-def generate_output_summ(ranked_sentences_dict, article_key, article_data, number_sentences):
-    summary = []
-    for i in range(number_sentences):
-        s = ranked_sentences_dict[article_key][i][0]
-        summary.append(article_data[article_key].iloc[s, 0])
-        summary.append(" ")
-
-        summary = "".join(summary)
-
-    return summary
-
-
-
 def get_summ(dictionary):
+    """ returns values of a input dictionary as a List
+    :param dictionary:
+    :return:
+    """
     Summaries = []
 
     for i in range(len(dictionary)):
@@ -62,6 +52,30 @@ def get_summ(dictionary):
         Summaries.append(Summary)
 
     return Summaries
+
+
+def generate_output_summ(ranked_sentences_dict, article_key, article_data, number_sentences):
+    """ generates output summary specifically from the TextRank Output
+
+    :param ranked_sentences_dict: dictionary, that ranks importance sentences {sss:sss,}
+    :param article_key:
+    :param article_data:
+    :param number_sentences: number of sentences in Summary
+    :return:
+    """
+    summary = []
+    for i in range(number_sentences):
+        s = ranked_sentences_dict[article_key][i][0]
+        summary.append(article_data[article_key].iloc[s, 0])
+        summary.append(" ")
+
+        summary = "".join(summary)
+
+    return summary
+
+
+
+
 
 
 
@@ -81,29 +95,45 @@ def eval_Rouge (reference_Summary, output_Summary):
 
 
 
-# create input (reference summary and generated output summaries as lists)
-cnnTRoutput_summ = get_summ(cnnTRoutput_summ_dict)
+# create input for evaluation method (reference summary and generated output summaries as lists)
+cnn_TR_summ = get_summ(cnn_TRoutput_summ_dict)
 cnn_reference_summ = get_summ(cnn_reference_summ_dict)
 
 
 # evaluate performance with ROUGE (output generated in Summarizer.py)
 rouge = Rouge()
-evalR = eval_Rouge(cnn_reference_summ, cnnTRoutput_summ)
+evalR = eval_Rouge(cnn_reference_summ, cnn_TR_summ)
 
 
 # evaluate performance with ROUGE (generating a variance of outputs with different number of sentences)
-evalR_var_results = []
-for i in range(10):
-    evalR_var = []
-    for key in cnn_reference_summ_dict.keys():
-        output_var = generate_output_summ(cnn_TRoutput_ranking_dict, key, cnn_data, i)
-        evalR_var.append(i, eval_Rouge(cnn_reference_summ, output_var))
+# evalR_var_results = []
+# for i in range(10):
+#     evalR_var = []
+#     for key in cnn_reference_summ_dict.keys():
+#         output_var = generate_output_summ(cnn_TRoutput_ranking_dict, key, cnn_data, i)
+#         evalR_var.append(i, eval_Rouge(cnn_reference_summ, output_var))
+#
+#     evalR_var_results.append(i, evalR_var.mean())
+#     print("average score for ", i, "-sentence Summary: ", evalR_var.mean())
 
-    evalR_var_results.append(i, evalR_var.mean())
-    print("average score for ", i, "-sentence Summary: ", evalR_var.mean())
+
+#______
+
+# cnn_generated_summ = []
+# for key in cnn_data.keys():
+#     cnn_generated_summ.append(create_summ_TR(cnn_data_TotalRanking, key, cnn_data, 3))
 
 
-
+#evaluate performance with ROUGE (generating a variance of outputs with different number of sentences)
+# evalR_var_results = []
+# for i in range(10):
+#     evalR_var = []
+#     for key in cnn_summary.keys():
+#         output_var = create_summ_TR(cnn_data_TotalRanking, key, cnn_data, i)
+#         evalR_var.append(i, eval_summ(cnn_summary, output_var))
+#
+#     evalR_var_results.append(i, evalR_var.mean())
+#     print("average score for ", i, "-sentence Summary: ", evalR_var.mean())
 
 
 
