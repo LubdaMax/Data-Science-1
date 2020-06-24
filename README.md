@@ -20,6 +20,9 @@ Videoreihe zu Textanalyse:
 * https://link.springer.com/content/pdf/10.1007%2F3-540-36127-8.pdf
 * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.43.4634
 
+### Eval
+https://www.aclweb.org/anthology/W04-1013/
+
 ### Wichtige Tools, Datenbanken, Libaries
 * https://www.nltk.org/
 * https://www.tensorflow.org/datasets/catalog/overview
