@@ -12,14 +12,18 @@ from sklearn.metrics.pairwise import cosine_similarity
 import spacy
 
 rootpath = Path.cwd()
-filename = Path.joinpath(rootpath, r"cnn_articles_dict")
+filename = Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_articles_dict")
 infile = open(filename,'rb')
 article_dict = pickle.load(infile)
 infile.close()
 #print(article_dict["Article1"])
 
-for i in range(len(article_dict)):
-    article_dict["Article{0}".format(i)].columns = ["sentence"]
+for i in range(1, len(article_dict)):
+    try:
+        article_dict["Article{0}".format(i)].columns = ["sentence"]
+    except:
+        
+        print(article_dict["Article{0}".format(i)], (i))
 
 def pos(Dataframe):
     Dataframe["pos"] = np.linspace(1, Dataframe.shape[0], Dataframe.shape[0])
@@ -117,7 +121,7 @@ def rel_s_lenght(Dataframe):
     return Dataframe
 
 
-def title_similarity_s2s_cohesion(Dataframe):
+def centroid_similarity_s2s_cohesion(Dataframe):
     def get_vectors(strs):
         text = strs
         vectorizer = CountVectorizer()
@@ -155,18 +159,34 @@ def title_similarity_s2s_cohesion(Dataframe):
         sentence_string += "."
         sentence_list.append(sentence_string)
     
-    matrix = get_cosine_sim(sentence_list)
-    Dataframe["title_sim"] = np.zeros(num_sentences)
-
+    cosine_matrix = get_cosine_sim(sentence_list)
+    
     cohesions = np.array([])
     for s in range(num_sentences):
-        cohesion = sum(matrix[:, s]) - 1
+        cohesion = sum(cosine_matrix[:, s]) - 1
         cohesions = np.append(cohesions, cohesion)
 
     rel_cohesions = cohesions / cohesions.max()
     Dataframe["rel_s2s_cohs"] = rel_cohesions
+
+    vector_matrix = get_vectors(sentence_list)
+    centroid = np.zeros(len(vector_matrix[0]))
+    for i in vector_matrix:
+        centroid += i
+    centroid = centroid/len(vector_matrix)
+    centroid_matrix = np.vstack((centroid, vector_matrix))
+    #print(centroid_matrix)
+    centroid_cosine_matirx = cosine_similarity(centroid_matrix)
+
+    centroid_similarity = []
+    for s in range(num_sentences):
+        similarity = centroid_cosine_matirx[s+1, 0] / max(centroid_cosine_matirx[1:, 0])
+        centroid_similarity.append(similarity)
+    
+    Dataframe["centroid_sim"] = centroid_similarity
+    
     # Drop title from Frame
-    Dataframe = Dataframe.drop(index=[0])
+    # Dataframe = Dataframe.drop(index=[0]) no more title in data
     return Dataframe
         
 
@@ -224,12 +244,12 @@ def main_concept(Dataframe):
 
 
 def add_indep(Dict):
-    for i in range(len(Dict)):
+    for i in range(1, len(Dict)):
         Dict["Article{0}".format(i)] = pos(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = Relative_pos(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = TF_ISF(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = rel_s_lenght(Dict["Article{0}".format(i)])
-        Dict["Article{0}".format(i)] = title_similarity_s2s_cohesion(Dict["Article{0}".format(i)])
+        Dict["Article{0}".format(i)] = centroid_similarity_s2s_cohesion(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = named_entity(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = main_concept(Dict["Article{0}".format(i)])
         print(i)
@@ -238,7 +258,7 @@ def add_indep(Dict):
 
 def pickle_save(Dict):
     rootpath = Path.cwd()
-    outfile = open(Path.joinpath(rootpath, r"cnn_indep_8"), 'wb')
+    outfile = open(Path.joinpath(rootpath, r"cnn_indep_8_10k"), 'wb')
     pickle.dump(Dict, outfile)
     outfile.close()
 
@@ -257,6 +277,6 @@ pickle_save(article_dict)
 
 
 rootpath = Path.cwd()
-testopen = open(Path.joinpath(rootpath, r"cnn_indep_8"), 'rb')
+testopen = open(Path.joinpath(rootpath, r"cnn_indep_8_10k"), 'rb')
 idep_dict = pickle.load(testopen)
 print(idep_dict["Article200"])
