@@ -109,6 +109,7 @@ for i in range(cnn_data.shape[0]):
     cnn_article_dict[key] = pd.DataFrame(cnn_data.iloc[i, 2])
 
 print(cnn_article_dict)
+print(cnn_article_dict["Article0"].iloc[0,0])
 
 
 cnn_summary_dict = {}
