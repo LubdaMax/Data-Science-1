@@ -23,40 +23,40 @@ pd.set_option('display.width', desired_width)
 np.set_printoptions(linewidth=desired_width)
 pd.set_option('display.max_columns',10)
 
-## CNN
-# unpickle preprocessed data (articles)
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
-rootpath = Path.cwd()
-openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_articles_dict"), 'rb')
-data = pickle.load(openfile)
-openfile.close()
-
-# unpickle preprocessed data (summaries)
-#os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
-rootpath = Path.cwd()
-openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_summaries_dict"), 'rb')
-summaries = pickle.load(openfile)
-openfile.close()
-
-#
-# ## WIKIHOW
-# os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
-# rootpath = Path.cwd()
-#
+# ## CNN
 # # unpickle preprocessed data (articles)
-# openfile = open(Path.joinpath(rootpath, r"Wikihow\partial_data_processed_no_overview"), 'rb')
+# #os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
+# rootpath = Path.cwd()
+# openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_articles_dict"), 'rb')
 # data = pickle.load(openfile)
 # openfile.close()
 #
 # # unpickle preprocessed data (summaries)
-# openfile = open(Path.joinpath(rootpath, "Wikihow\wiki_partial_summaries"), 'rb')
+# #os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
+# rootpath = Path.cwd()
+# openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_summaries_dict"), 'rb')
 # summaries = pickle.load(openfile)
 # openfile.close()
+
+
+
+## WIKIHOW
+os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
+rootpath = Path.cwd()
+
+# unpickle preprocessed data (articles)
+openfile = open(Path.joinpath(rootpath, r"Wikihow\partial_data_processed_no_overview_notitle_1col"), 'rb')
+data = pickle.load(openfile)
+openfile.close()
+
+# unpickle preprocessed data (summaries)
+openfile = open(Path.joinpath(rootpath, "Wikihow\wiki_partial_summaries"), 'rb')
+summaries = pickle.load(openfile)
+openfile.close()
 #
 # for key in data.keys():
 #     if data[key].iloc[0,0]==0:
 #         print(key, data[key])
-
 
 
 
@@ -144,11 +144,10 @@ def apply_stemming(text):
 
 # Remove punctuation, stop words, convert everything to lowercase, apply Lemmatization or Stemming
 for article in data.keys():
-    # df = data[article]
-    # df.drop(columns=1)
-    data[article][1] = 0
-    for sentence in range(len(data[article])):
-        data[article].iloc[sentence, 1] = data[article].iloc[sentence, 0].lower()
+    data[article][1] = 0 ##soll eigentlich die ganze Spalte 1 mit Nullen auffülen
+
+    for sentence in range(data[article].shape[0]):
+        data[article].iloc(axis=0)[sentence, 1] = data[article].iloc(axis=0)[sentence, 0].lower()
         data[article].iloc[sentence, 1] = remove_numbers(data[article].iloc[sentence, 1])
         data[article].iloc[sentence, 1] = remove_punctuation(data[article].iloc[sentence, 1])
         data[article].iloc[sentence, 1] = remove_stopwords(data[article].iloc[sentence, 1])
@@ -244,6 +243,7 @@ for key in data.keys():
         ranking_dict[key] = [(0,0)]
         TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 0))
         print("Achtung, leerer Eintrag?")
+        print(key)
         print(ranking_dict[key])
         print(TRoutput_summ_dict[keyS])
         print(data[key])
@@ -255,31 +255,31 @@ for key in data.keys():
 
 
 
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
-rootpath = Path.cwd()
-
-## CNN / save summaries
-filename = r"LexRank\cnn_TRoutput_summ_dict"
-outfile = open(Path.joinpath(rootpath, filename), 'wb')
-pickle.dump(TRoutput_summ_dict, outfile)
-outfile.close()
-
-filename = r"LexRank\cnn_TRoutput_ranking_dict"
-outfile = open(Path.joinpath(rootpath, filename), 'wb')
-pickle.dump(ranking_dict, outfile)
-outfile.close()
-
-
-# ## WIKIHOW / save summaries
-# filename = r"LexRank\wiki_TRoutput_summ_dict"
+# #os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
+# rootpath = Path.cwd()
+#
+# ## CNN / save summaries
+# filename = r"LexRank\cnn_TRoutput_summ_dict"
 # outfile = open(Path.joinpath(rootpath, filename), 'wb')
 # pickle.dump(TRoutput_summ_dict, outfile)
 # outfile.close()
 #
-# filename = r"LexRank\wiki_TRoutput_ranking_dict"
+# filename = r"LexRank\cnn_TRoutput_ranking_dict"
 # outfile = open(Path.joinpath(rootpath, filename), 'wb')
 # pickle.dump(ranking_dict, outfile)
 # outfile.close()
+
+
+## WIKIHOW / save summaries
+filename = r"LexRank\wiki_TRoutput_summ_dict"
+outfile = open(Path.joinpath(rootpath, filename), 'wb')
+pickle.dump(TRoutput_summ_dict, outfile)
+outfile.close()
+
+filename = r"LexRank\wiki_TRoutput_ranking_dict"
+outfile = open(Path.joinpath(rootpath, filename), 'wb')
+pickle.dump(ranking_dict, outfile)
+outfile.close()
 
 
 
