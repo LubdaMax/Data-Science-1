@@ -22,7 +22,7 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 
 
 # Relative path of dataset
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
+#os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
 rootpath = Path.cwd()
 cnn_path = Path.joinpath(rootpath, r"CNN")
 
@@ -45,20 +45,9 @@ for entry in os.scandir(cnn_path):
     else:
         break
 
-# filename = "cnn_data"
-# outfile = open(filename, 'wb')
-# pickle.dump(cnn_data, outfile)
-# outfile.close()
-
-# filename = Path.joinpath(rootpath, r"cnn_data")
-# infile = open(filename, 'rb')
-# cnn_data = pickle.load(infile)
-# infile.close()
 
 
-
-not_cnn = []
-empty = []
+to_drop = []
 
 for i in range(cnn_data.shape[0]):
     cnn_data.iloc[i, 2] = re.sub("\n\n",". ",cnn_data.iloc[i,1]) ##remove new line symbol
@@ -68,7 +57,7 @@ for i in range(cnn_data.shape[0]):
         cnn_data.iloc[i, 2][0] = re.sub('^.*?-- ',"",cnn_data.iloc[i, 2][0]) #removes: (CNN) --
         cnn_data.iloc[i, 2][0] = re.sub('^.*?\(CNN\)', "", cnn_data.iloc[i, 2][0])  # removes: (CNN)
     else:
-        empty.append(i)
+        to_drop.append(i)
 
 
     #print(cnn_data.iloc[i, 2])
@@ -97,34 +86,29 @@ for i in range(cnn_data.shape[0]):
     cnn_data.iloc[i, 2] = sentences
     cnn_data.iloc[i, 3] = summary
 
+    if "(CNN)" not in (cnn_data.iloc[i,1]) and i not in to_drop:
+        to_drop.append(i)
+
    # print('summary ',cnn_data.iloc[i, 3])
     #print('article ', cnn_data.iloc[i, 2])
 
 
-    if "(CNN)" not in (cnn_data.iloc[i,1]) and i not in empty:
-        not_cnn.append(i)
-
-#print(cnn_data)
 
 
-##?? drop articles that are potentially from other sources // drop articles with no content
-#for i in not_cnn:
-    #print("not CNN?: ", cnn_data.iloc[i,2])
-#for i in empty:
-    #print("empty?: ", cnn_data.iloc[i,2])
 
-cnn_data.drop(cnn_data.index[not_cnn], inplace=True)
-cnn_data.drop(cnn_data.index[empty], inplace=True)
-#cnn_data.reindex
+cnn_data.drop(cnn_data.index[to_drop], inplace=True)
+cnn_data = cnn_data.reset_index(drop=True)
+
 
 
 ## save Articles and Summaries in Dictionary, having a dataframe as item which contains one row per sentence
 
 cnn_article_dict = {}
-
 for i in range(cnn_data.shape[0]):
     key = "Article" + str(i)
     cnn_article_dict[key] = pd.DataFrame(cnn_data.iloc[i, 2])
+
+print(cnn_article_dict)
 
 
 cnn_summary_dict = {}
@@ -138,27 +122,26 @@ cnn_summary_dataframe = cnn_data.iloc[i, 3]
 
 
 
-
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/Pre-Processing")
+os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
 rootpath = Path.cwd()
 
 # save outputs
-filename = r"cnn_articles_dict"
+filename = r"Pre-Processing & EDA\cnn_articles_dict"
 outfile = open(Path.joinpath(rootpath, filename), 'wb')
 pickle.dump(cnn_article_dict, outfile)
 outfile.close()
 
-filename = r"cnn_summaries_dict"
+filename = r"Pre-Processing & EDA\cnn_summaries_dict"
 outfile = open(Path.joinpath(rootpath, filename), 'wb')
 pickle.dump(cnn_summary_dict, outfile)
 outfile.close()
 
-filename = r"cnn_data_dataframe"
+filename = r"Pre-Processing & EDA\cnn_data_dataframe"
 outfile = open(Path.joinpath(rootpath, filename), 'wb')
 pickle.dump(cnn_data, outfile)
 outfile.close()
 
-filename = r"cnn_summary_dataframe"
+filename = r"Pre-Processing & EDA\cnn_summary_dataframe"
 outfile = open(Path.joinpath(rootpath, filename), 'wb')
 pickle.dump(cnn_summary_dataframe, outfile)
 outfile.close()
