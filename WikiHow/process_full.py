@@ -12,17 +12,17 @@ rootpath = Path.cwd()
 filepath = Path.joinpath(rootpath, r"Wikihow\wikihowSep.csv")
 Data_full = pd.read_csv(filepath, engine='python')
 Data_full = Data_full.astype(str)
-Data = Data_full.iloc[0:5000,:]
+Data = Data_full.iloc[0:10000,:]
 rows, columns = Data.shape
 
-filename = r"Wikihow\partial_data"
+filename = r"Wikihow\wiki_data_10k"
 outfile = open(Path.joinpath(rootpath, filename) , 'wb')
 pickle.dump(Data, outfile)
 outfile.close()
 """
 
 rootpath = Path.cwd()
-infile = open(Path.joinpath(rootpath, r"Wikihow\partial_data") , "rb")
+infile = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_10k") , "rb")
 Data = pickle.load(infile)
 Data = Data.drop("sectionLabel", axis=1)
 Data = Data.rename_axis("idx")
@@ -50,8 +50,8 @@ while True:
         article = []
         in_summary = []
 
-        article.append(title)
-        in_summary.append(0)
+        #article.append(title)
+        #in_summary.append(0)
 
         #for s in overview:
             #article.append(s)
@@ -108,7 +108,13 @@ for i in range(len(Article_dict)):
         del Article_dict["Article{0}".format(i)]
 print(len(Article_dict))
 """
-filename = r"Wikihow\partial_data_processed_no_overview"
+"""
+for i in range(len(Article_dict)):
+    Article_dict["Article{0}".format(i)] = Article_dict["Article{0}".format(i)]["sentence"]
+"""
+
+
+filename = r"Wikihow\wiki_data_processed_no_overview_notitle_10k"
 outfile = open(Path.joinpath(rootpath, filename) , 'wb')
 pickle.dump(Article_dict, outfile)
 outfile.close()
@@ -125,9 +131,11 @@ for i in range(len(Article_dict)):
     Summary_dict["Summary{0}".format(i)] = summary
 
         
-summary_name = r"Wikihow\wiki_partial_summaries"
+summary_name = r"Wikihow\wiki_partial_summaries_10k"
 summary_file = open(Path.joinpath(rootpath, summary_name), 'wb')
 pickle.dump(Summary_dict, summary_file)
 summary_file.close()
 
 print(Summary_dict["Summary3"])
+
+print(Article_dict["Article3"])
