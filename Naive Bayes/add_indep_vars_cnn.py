@@ -18,7 +18,7 @@ article_dict = pickle.load(infile)
 infile.close()
 #print(article_dict["Article1"])
 
-for i in range(1, len(article_dict)):
+for i in range(len(article_dict)):
     try:
         article_dict["Article{0}".format(i)].columns = ["sentence"]
     except:
@@ -244,7 +244,7 @@ def main_concept(Dataframe):
 
 
 def add_indep(Dict):
-    for i in range(1, len(Dict)):
+    for i in range(len(Dict)):
         Dict["Article{0}".format(i)] = pos(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = Relative_pos(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = TF_ISF(Dict["Article{0}".format(i)])
