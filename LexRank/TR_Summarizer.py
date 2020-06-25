@@ -18,46 +18,42 @@ from collections import Counter
 import tensorflow as tf
 
 
-desired_width=320
+## indicat what dataset is processed: cnn or wikihow
+dataset = "wikihow"
+rootpath = Path.cwd()
+
+
+
+
+if dataset == "cnn":
+
+    # unpickle preprocessed data (articles)
+    openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_articles_dict"), 'rb')
+    data = pickle.load(openfile)
+    openfile.close()
+
+    # unpickle preprocessed data (summaries)
+    openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_summaries_dict"), 'rb')
+    summaries = pickle.load(openfile)
+    openfile.close()
+
+elif dataset == "wikihow":
+
+    # unpickle preprocessed data (articles)
+    openfile = open(Path.joinpath(rootpath, r"Wikihow\partial_data_processed_no_overview"), 'rb')
+    data = pickle.load(openfile)
+    openfile.close()
+
+    # unpickle preprocessed data (summaries)
+    openfile = open(Path.joinpath(rootpath, "Wikihow\wiki_partial_summaries"), 'rb')
+    summaries = pickle.load(openfile)
+    openfile.close()
+
+
+desired_width = 320
 pd.set_option('display.width', desired_width)
 np.set_printoptions(linewidth=desired_width)
-pd.set_option('display.max_columns',10)
-
-## CNN
-# unpickle preprocessed data (articles)
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
-rootpath = Path.cwd()
-openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_articles_dict"), 'rb')
-data = pickle.load(openfile)
-openfile.close()
-
-# unpickle preprocessed data (summaries)
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
-rootpath = Path.cwd()
-openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_summaries_dict"), 'rb')
-summaries = pickle.load(openfile)
-openfile.close()
-
-#
-# ## WIKIHOW
-# os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
-# rootpath = Path.cwd()
-#
-# # unpickle preprocessed data (articles)
-# openfile = open(Path.joinpath(rootpath, r"Wikihow\partial_data_processed_no_overview"), 'rb')
-# data = pickle.load(openfile)
-# openfile.close()
-#
-# # unpickle preprocessed data (summaries)
-# openfile = open(Path.joinpath(rootpath, "Wikihow\wiki_partial_summaries"), 'rb')
-# summaries = pickle.load(openfile)
-# openfile.close()
-#
-# for key in data.keys():
-#     if data[key].iloc[0,0]==0:
-#         print(key, data[key])
-
-
+pd.set_option('display.max_columns', 5)
 
 
 def remove_punctuation(text):
@@ -113,6 +109,7 @@ def remove_stopwords(text):
 
     return text
 
+
 def apply_lemmatization(text):
     """
         """
@@ -127,6 +124,7 @@ def apply_lemmatization(text):
 
     return text
 
+
 def apply_stemming(text):
     """
         """
@@ -140,20 +138,6 @@ def apply_stemming(text):
     text = "".join(text_stemmed)
 
     return text
-
-
-# Remove punctuation, stop words, convert everything to lowercase, apply Lemmatization or Stemming
-for article in data.keys():
-    # df = data[article]
-    # df.drop(columns=1)
-    data[article][1] = 0
-    for sentence in range(len(data[article])):
-        data[article].iloc[sentence, 1] = data[article].iloc[sentence, 0].lower()
-        data[article].iloc[sentence, 1] = remove_numbers(data[article].iloc[sentence, 1])
-        data[article].iloc[sentence, 1] = remove_punctuation(data[article].iloc[sentence, 1])
-        data[article].iloc[sentence, 1] = remove_stopwords(data[article].iloc[sentence, 1])
-        #data[article].iloc[sentence, 1] = apply_lemmatization(data[article].iloc[sentence, 0])
-        data[article].iloc[sentence, 1] = apply_stemming(data[article].iloc[sentence, 1])
 
 
 def bag_of_words(article):
@@ -173,6 +157,7 @@ def bag_of_words(article):
     #word_frequency_sorted = OrderedDict(sorted(word_frequency.items(), key=lambda x: x[1], reverse=True))
 
     return word_frequency
+
 
 def vector_representation(article, word_frequency):
     #use scikit-learn: count vectorizer instead (also to remove stop words)
@@ -196,6 +181,7 @@ def vector_representation(article, word_frequency):
 
     return article_vectors
 
+
 def graph_representation (vector_representation):
     """"generates similarity graph"""
 
@@ -206,6 +192,7 @@ def graph_representation (vector_representation):
     #similarity_graph = similarity_graph.toarray()
 
     return similarity_graph
+
 
 def pagerank (similarity_graph):
     """"
@@ -222,9 +209,28 @@ def generate_output_summ(ranked_sentences_dict, article_key, article_data, numbe
     for i in range(number_sentences):
         s = ranked_sentences_dict[article_key][i][0]
         output_summary.append(article_data[article_key].iloc[s, 0])
+        print(output_summary)
 
     return output_summary
 
+
+
+# PRE-PROCESSING II
+# Remove punctuation, stop words, convert everything to lowercase, apply Lemmatization or Stemming
+for article in data.keys():
+    # df = data[article]
+    # df.drop(columns=1)
+    data[article][1] = 0
+    for sentence in range(len(data[article])):
+        data[article].iloc[sentence, 1] = data[article].iloc[sentence, 0].lower()
+        data[article].iloc[sentence, 1] = remove_numbers(data[article].iloc[sentence, 1])
+        data[article].iloc[sentence, 1] = remove_punctuation(data[article].iloc[sentence, 1])
+        data[article].iloc[sentence, 1] = remove_stopwords(data[article].iloc[sentence, 1])
+        #data[article].iloc[sentence, 1] = apply_lemmatization(data[article].iloc[sentence, 0])
+        data[article].iloc[sentence, 1] = apply_stemming(data[article].iloc[sentence, 1])
+
+
+# APPLY ALGORITHM
 # Create Vector Representation of sentences // Create Similarity Graph and Apply Rank Method
 article_frequency_dict = {}
 article_vector_dict = {}
@@ -234,11 +240,14 @@ count = 0
 
 
 for key in data.keys():
-    keyS = "Summary" + str(count)
+    countStr = str(count)
+    print(key)
+    keyS = "Summary" + countStr
     article_frequency_dict[key] = bag_of_words(data[key])
     article_vector_dict[key] = vector_representation(data[key][1], article_frequency_dict[key])
     if not article_vector_dict[key] == []:
         ranking_dict[key] = pagerank((graph_representation(article_vector_dict[key])))
+        print(keyS)
         TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 3))
     else:
         ranking_dict[key] = [(0,0)]
@@ -247,41 +256,43 @@ for key in data.keys():
         print(ranking_dict[key])
         print(TRoutput_summ_dict[keyS])
         print(data[key])
-
-    count += count
+    count += 1
+    print(count)
+    print(keyS)
 
 #print(ranking_dict)
 #print(TRoutput_summ_dict)
 
+print(TRoutput_summ_dict)
+
+## SAVE FILES WITH OUTPUTS
+
+if dataset == "cnn":
+
+    ## CNN / save summaries
+    filename = r"LexRank\cnn_TRoutput_summ_dict"
+    outfile = open(Path.joinpath(rootpath, filename), 'wb')
+    pickle.dump(TRoutput_summ_dict, outfile)
+    outfile.close()
+
+    filename = r"LexRank\cnn_TRoutput_ranking_dict"
+    outfile = open(Path.joinpath(rootpath, filename), 'wb')
+    pickle.dump(ranking_dict, outfile)
+    outfile.close()
 
 
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
-rootpath = Path.cwd()
+elif dataset == "wikihow":
 
-## CNN / save summaries
-filename = r"LexRank\cnn_TRoutput_summ_dict"
-outfile = open(Path.joinpath(rootpath, filename), 'wb')
-pickle.dump(TRoutput_summ_dict, outfile)
-outfile.close()
+    ## WIKIHOW / save summaries
+    filename = r"LexRank\wiki_TRoutput_summ_dict"
+    outfile = open(Path.joinpath(rootpath, filename), 'wb')
+    pickle.dump(TRoutput_summ_dict, outfile)
+    outfile.close()
 
-filename = r"LexRank\cnn_TRoutput_ranking_dict"
-outfile = open(Path.joinpath(rootpath, filename), 'wb')
-pickle.dump(ranking_dict, outfile)
-outfile.close()
-
-
-# ## WIKIHOW / save summaries
-# filename = r"LexRank\wiki_TRoutput_summ_dict"
-# outfile = open(Path.joinpath(rootpath, filename), 'wb')
-# pickle.dump(TRoutput_summ_dict, outfile)
-# outfile.close()
-#
-# filename = r"LexRank\wiki_TRoutput_ranking_dict"
-# outfile = open(Path.joinpath(rootpath, filename), 'wb')
-# pickle.dump(ranking_dict, outfile)
-# outfile.close()
-
-
+    filename = r"LexRank\wiki_TRoutput_ranking_dict"
+    outfile = open(Path.joinpath(rootpath, filename), 'wb')
+    pickle.dump(ranking_dict, outfile)
+    outfile.close()
 
 
 
