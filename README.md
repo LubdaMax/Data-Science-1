@@ -20,6 +20,7 @@ Videoreihe zu Textanalyse:
 * https://link.springer.com/content/pdf/10.1007%2F3-540-36127-8.pdf
 * http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.43.4634
 * http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.43.4634&rep=rep1&type=pdf TFISF
+* https://www.cc.gatech.edu/~isbell/reading/papers/Rish.pdf Bayes
 
 ### Eval
 https://www.aclweb.org/anthology/W04-1013/
