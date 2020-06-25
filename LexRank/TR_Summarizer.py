@@ -155,8 +155,6 @@ for article in data.keys():
         #data[article].iloc[sentence, 1] = apply_lemmatization(data[article].iloc[sentence, 0])
         data[article].iloc[sentence, 1] = apply_stemming(data[article].iloc[sentence, 1])
 
-        #REMOVE NUMBERS !!!!!
-
 
 def bag_of_words(article):
     """
@@ -238,8 +236,6 @@ count = 0
 for key in data.keys():
     keyS = "Summary" + str(count)
     article_frequency_dict[key] = bag_of_words(data[key])
-    print(article_frequency_dict[key])
-    print(data[key])
     article_vector_dict[key] = vector_representation(data[key][1], article_frequency_dict[key])
     if not article_vector_dict[key] == []:
         ranking_dict[key] = pagerank((graph_representation(article_vector_dict[key])))
