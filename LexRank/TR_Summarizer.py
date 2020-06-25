@@ -40,7 +40,7 @@ if dataset == "cnn":
 elif dataset == "wikihow":
 
     # unpickle preprocessed data (articles)
-    openfile = open(Path.joinpath(rootpath, r"Wikihow\partial_data_processed_no_overview"), 'rb')
+    openfile = open(Path.joinpath(rootpath, r"Wikihow\partial_data_processed_no_overview_notitle_1col"), 'rb')
     data = pickle.load(openfile)
     openfile.close()
 
@@ -220,6 +220,7 @@ def generate_output_summ(ranked_sentences_dict, article_key, article_data, numbe
 for article in data.keys():
     # df = data[article]
     # df.drop(columns=1)
+    data[article] = data[article].to_frame()
     data[article][1] = 0
     for sentence in range(len(data[article])):
         data[article].iloc[sentence, 1] = data[article].iloc[sentence, 0].lower()
