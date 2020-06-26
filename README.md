@@ -2,11 +2,11 @@
 The Wikihow raw data has to be downloaded manually (see Datasets below).
 CNN data is partially provided (portion of 1000 texts used).
 All other files are available and working.
-Preprocessing CNN: cnn preprocessing.py
-Preprocessing Wikihow:
-TextRank Algorithm: TR_Summarizer.py
-Naive Bayes: 
-Evaluation: evaluate.py / Naive Bayes in Naive Bayes folder (training_and_evaluation_bayes)
+* Preprocessing CNN: cnn preprocessing.py
+* Preprocessing Wikihow:
+* TextRank Algorithm: TR_Summarizer.py
+* Naive Bayes: wikihow: add_independ_vars.py; cnn: add_indep_vars_cnn.py; training and evaulation in one file
+* Evaluation: Textrank: evaluate.py / Naive Bayes in Naive Bayes folder (training_and_evaluation_bayes.py)
 
 
 ## Datasets
