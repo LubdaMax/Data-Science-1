@@ -1,21 +1,25 @@
 # Data-Science-1 Team: Winfo
 The Wikihow raw data has to be downloaded manually (see Datasets below).
+CNN data is partially provided (portion of 1000 texts used).
 All other files are available and working.
+* Preprocessing CNN: cnn preprocessing.py
+* Preprocessing Wikihow:
+* TextRank Algorithm: TR_Summarizer.py
+* Naive Bayes: wikihow: add_independ_vars.py; cnn: add_indep_vars_cnn.py; training and evaulation in one file
+* Evaluation: Textrank: evaluate.py / Naive Bayes in Naive Bayes folder (training_and_evaluation_bayes.py)
 
 
+## Datasets
+* CNN: https://github.com/abisee/cnn-dailymail
+* WikiHow: https://github.com/mahnazkoupaee/WikiHow-Dataset
+* CNN paper: https://arxiv.org/pdf/1810.09305.pdf
+* https://lionbridge.ai/datasets/the-best-25-datasets-for-natural-language-processing
+* https://www.kaggle.com/pariza/bbc-news-summary not used
+* https://github.com/awesomedata/awesome-public-datasets#naturallanguage not used
 
 ### textanalyse
 Videoreihe zu Textanalyse:
 * https://cognitiveclass.ai/courses/systemt
-
-### Zusammenfassen
-* https://pdfs.semanticscholar.org/7e30/d0c7aaaed7fa2d04fc8cc0fd3af8e24ca385.pdf
-* https://www.sciencedirect.com/topics/computer-science/extractive-summarization
-* https://shodhganga.inflibnet.ac.in/bitstream/10603/278911/15/15_chapter%205.pdf
-* https://link.springer.com/content/pdf/10.1007%2F3-540-36127-8.pdf
-* http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.43.4634
-* http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.43.4634&rep=rep1&type=pdf TFISF
-* https://www.cc.gatech.edu/~isbell/reading/papers/Rish.pdf Bayes
 
 ### Evaluation - Rouge
 * https://www.aclweb.org/anthology/W04-1013/
@@ -27,13 +31,7 @@ Videoreihe zu Textanalyse:
 * https://pypi.org/project/rouge/
 * https://spacy.io/usage/linguistic-features
 
-## Datasets
-* https://github.com/abisee/cnn-dailymail
-* https://github.com/mahnazkoupaee/WikiHow-Dataset
-* https://www.kaggle.com/pariza/bbc-news-summary not used
-* https://github.com/awesomedata/awesome-public-datasets#naturallanguage not used
-* https://lionbridge.ai/datasets/the-best-25-datasets-for-natural-language-processing
-* https://arxiv.org/pdf/1810.09305.pdf
+
 _________________________________________________________
 
 
