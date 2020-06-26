@@ -15,7 +15,6 @@ All other files are available and working.
 * CNN: https://github.com/abisee/cnn-dailymail
 * WikiHow: https://github.com/mahnazkoupaee/WikiHow-Dataset
 * CNN paper: https://arxiv.org/pdf/1810.09305.pdf
-* https://lionbridge.ai/datasets/the-best-25-datasets-for-natural-language-processing
 * https://www.kaggle.com/pariza/bbc-news-summary not used
 * https://github.com/awesomedata/awesome-public-datasets#naturallanguage not used
 
