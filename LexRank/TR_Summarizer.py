@@ -24,7 +24,6 @@ rootpath = Path.cwd()
 
 
 
-
 if dataset == "cnn":
 
     # unpickle preprocessed data (articles)
@@ -161,9 +160,8 @@ def bag_of_words(article):
 
 def vector_representation(article, word_frequency):
     #use scikit-learn: count vectorizer instead (also to remove stop words)
-    """"returns input article as matrix
-    where each column represents a word out of the article and
-    each rows a sentence indicating with 0/1 words in each sentence """
+    """" returns a vector for each sentence indicating for each word in the article
+    whether it is contained in the sentence or not"""
 
     word_vector = word_frequency.keys()
     article_vectors = []
@@ -191,13 +189,15 @@ def graph_representation (vector_representation):
     similarity_graph = normalized_matrix * normalized_matrix.T
     #similarity_graph = similarity_graph.toarray()
 
+
     return similarity_graph
 
 
 def pagerank (similarity_graph):
-    """"
+    """" PageRank computes a ranking of the nodes in the graph G based on the structure of the incoming links. Scores are then sorted.
         """
-    pagerank_graph = nx.from_scipy_sparse_matrix(similarity_graph)
+    pagerank_graph = nx.from_scipy_sparse_matrix(similarity_graph) #An adjacency matrix representation of the graph
+    print(pagerank_graph)
     scores = nx.pagerank(pagerank_graph)
     scores_sorted = sorted(scores.items(), key=lambda x: x[1], reverse=True)    #Ausgabe als Liste mit Tupels
 
@@ -209,7 +209,6 @@ def generate_output_summ(ranked_sentences_dict, article_key, article_data, numbe
     for i in range(number_sentences):
         s = ranked_sentences_dict[article_key][i][0]
         output_summary.append(article_data[article_key].iloc[s, 0])
-        print(output_summary)
 
     return output_summary
 
@@ -220,15 +219,16 @@ def generate_output_summ(ranked_sentences_dict, article_key, article_data, numbe
 for article in data.keys():
     # df = data[article]
     # df.drop(columns=1)
-    data[article] = data[article].to_frame()
+    if dataset == "wikihow":
+        data[article] = data[article].to_frame()
     data[article][1] = 0
     for sentence in range(len(data[article])):
         data[article].iloc[sentence, 1] = data[article].iloc[sentence, 0].lower()
         data[article].iloc[sentence, 1] = remove_numbers(data[article].iloc[sentence, 1])
         data[article].iloc[sentence, 1] = remove_punctuation(data[article].iloc[sentence, 1])
         data[article].iloc[sentence, 1] = remove_stopwords(data[article].iloc[sentence, 1])
-        #data[article].iloc[sentence, 1] = apply_lemmatization(data[article].iloc[sentence, 0])
-        data[article].iloc[sentence, 1] = apply_stemming(data[article].iloc[sentence, 1])
+        data[article].iloc[sentence, 1] = apply_lemmatization(data[article].iloc[sentence, 1])
+        #data[article].iloc[sentence, 1] = apply_stemming(data[article].iloc[sentence, 1])
 
 
 # APPLY ALGORITHM
@@ -242,14 +242,17 @@ count = 0
 
 for key in data.keys():
     countStr = str(count)
-    print(key)
     keyS = "Summary" + countStr
     article_frequency_dict[key] = bag_of_words(data[key])
     article_vector_dict[key] = vector_representation(data[key][1], article_frequency_dict[key])
+    print(article_vector_dict[key])
     if not article_vector_dict[key] == []:
         ranking_dict[key] = pagerank((graph_representation(article_vector_dict[key])))
-        print(keyS)
-        TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 3))
+        try:
+            TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 7))
+        except:
+            TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 3))
+
     else:
         ranking_dict[key] = [(0,0)]
         TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 0))
@@ -258,25 +261,24 @@ for key in data.keys():
         print(TRoutput_summ_dict[keyS])
         print(data[key])
     count += 1
-    print(count)
-    print(keyS)
+
 
 #print(ranking_dict)
 #print(TRoutput_summ_dict)
 
 print(TRoutput_summ_dict)
 
-## SAVE FILES WITH OUTPUTS
+# SAVE FILES WITH OUTPUTS
 
 if dataset == "cnn":
 
     ## CNN / save summaries
-    filename = r"LexRank\cnn_TRoutput_summ_dict"
+    filename = r"LexRank\cnn_TRoutput_summ_dict_lemma_3sent"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(TRoutput_summ_dict, outfile)
     outfile.close()
 
-    filename = r"LexRank\cnn_TRoutput_ranking_dict"
+    filename = r"LexRank\cnn_TRoutput_ranking_dict_lemma_3sent"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(ranking_dict, outfile)
     outfile.close()
@@ -285,12 +287,12 @@ if dataset == "cnn":
 elif dataset == "wikihow":
 
     ## WIKIHOW / save summaries
-    filename = r"LexRank\wiki_TRoutput_summ_dict"
+    filename = r"LexRank\wiki_TRoutput_summ_dict_lemma_3sent"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(TRoutput_summ_dict, outfile)
     outfile.close()
 
-    filename = r"LexRank\wiki_TRoutput_ranking_dict"
+    filename = r"LexRank\wiki_TRoutput_ranking_dict_lemma_3sent"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(ranking_dict, outfile)
     outfile.close()
