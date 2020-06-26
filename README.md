@@ -1,6 +1,5 @@
 # Data-Science-1 Team: Winfo
 The Wikihow raw data has to be downloaded manually (see Datasets below).
-
 CNN data is partially provided (portion of 1000 texts used).
 
 All other files are available and working.
@@ -20,7 +19,7 @@ All other files are available and working.
 * https://www.kaggle.com/pariza/bbc-news-summary not used
 * https://github.com/awesomedata/awesome-public-datasets#naturallanguage not used
 
-### textanalyse
+### Textanalyse
 Videoreihe zu Textanalyse:
 * https://cognitiveclass.ai/courses/systemt
 
