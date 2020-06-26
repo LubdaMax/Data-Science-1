@@ -17,7 +17,7 @@ import spacy
 # This file adds all requiered independent variables for classification to the dataframes
 # of the Wikihow dataset.
 rootpath = Path.cwd()
-filename = Path.joinpath(rootpath, r"Wikihow\wiki_data_processed_no_overview_notitle_10k")
+filename = Path.joinpath(rootpath, r"Pre-Processing & EDA\wiki_data_processed_no_overview_notitle_10k")
 infile = open(filename,'rb')
 article_dict = pickle.load(infile)
 infile.close()
@@ -276,7 +276,7 @@ def add_indep(Dict):
 def pickle_save(Dict):
     """Saves the file in pikle format"""
     rootpath = Path.cwd()
-    outfile = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_8_no_overview_notilte_10k"), 'wb')
+    outfile = open(Path.joinpath(rootpath, r"Naive Bayes\wiki_data_indep_8_no_overview_notilte_10k"), 'wb')
     pickle.dump(Dict, outfile)
     outfile.close()
 
@@ -298,6 +298,6 @@ pickle_save(article_dict)
 
 # opens the dictionary with independent variables as testcase
 rootpath = Path.cwd()
-testopen = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_8_no_overview_notilte_10k"), 'rb')
+testopen = open(Path.joinpath(rootpath, r"Naive Bayes\wiki_data_indep_8_no_overview_notilte_10k"), 'rb')
 idep_dict = pickle.load(testopen)
 print(idep_dict["Article200"])

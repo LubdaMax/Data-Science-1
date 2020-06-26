@@ -26,7 +26,7 @@ from rouge import Rouge
 # Then the Bayesian classifier is trained.
 # Only the Wikihow dataset is used for training due to the labeling.
 rootpath = Path.cwd()
-openfile = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_8_no_overview_notilte_10k"), 'rb')
+openfile = open(Path.joinpath(rootpath, r"Naive Bayes\wiki_data_indep_8_no_overview_notilte_10k"), 'rb')
 articles = pickle.load(openfile)
 openfile.close()
 
@@ -111,7 +111,7 @@ rootpath = Path.cwd()
 open_cnn_summ = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_summaries_dict"), 'rb')
 cnn_summary = pickle.load(open_cnn_summ)
 open_cnn_summ.close()
-open_wiki_summ = open(Path.joinpath(rootpath, r"Wikihow\wiki_partial_summaries_10k"), 'rb')
+open_wiki_summ = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\wiki_partial_summaries_10k"), 'rb')
 wiki_summary = pickle.load(open_wiki_summ)
 open_wiki_summ.close()
 
@@ -121,7 +121,7 @@ openfile = open(Path.joinpath(rootpath, r"Naive Bayes\Gauss_trained_10_no_overvi
 GaussNB = pickle.load(openfile)
 openfile.close()
 
-open_wiki = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_8_no_overview_notilte_10k"), 'rb')
+open_wiki = open(Path.joinpath(rootpath, r"Naive Bayes\wiki_data_indep_8_no_overview_notilte_10k"), 'rb')
 wiki_data = pickle.load(open_wiki)
 open_wiki.close()
 

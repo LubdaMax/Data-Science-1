@@ -115,11 +115,24 @@ for i in range(len(Article_dict)):
 # For the use in Textrank we have also created files without the second column
 # which contains the dependent variable.
 # These have the tag "_1col"
-filename = r"Wikihow\wiki_data_processed_no_overview_notitle_10k"
+filename = r"Pre-Processing & EDA\wiki_data_processed_no_overview_notitle_10k"
 outfile = open(Path.joinpath(rootpath, filename) , 'wb')
 pickle.dump(Article_dict, outfile)
 outfile.close()
 
+
+
+# Create the same dictionary with only one column for Text Rank
+"""
+Article_dict_1col = Article_dict
+for i in range(len(Article_dict_1col)):
+    Article_dict_1col["Article{0}".format(i)] = Article_dict_1col["Article{0}".format(i)]["sentence"]
+
+filename_1col = r"Pre-Processing & EDA\partial_data_processed_no_overview_notitle_1col"
+outfile = open(Path.joinpath(rootpath, filename_1col) , 'wb')
+pickle.dump(Article_dict_1col, outfile)
+outfile.close()
+"""
 # Create a similar dicitonary containing the summaries-
 Summary_dict = {}
 for i in range(len(Article_dict)):
@@ -133,7 +146,7 @@ for i in range(len(Article_dict)):
     Summary_dict["Summary{0}".format(i)] = summary
 
 # Export the summaries         
-summary_name = r"Wikihow\wiki_partial_summaries_10k"
+summary_name = r"Pre-Processing & EDA\wiki_partial_summaries_10k"
 summary_file = open(Path.joinpath(rootpath, summary_name), 'wb')
 pickle.dump(Summary_dict, summary_file)
 summary_file.close()
