@@ -7,23 +7,22 @@ from pathlib import Path
 import pickle
 
 
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
 
 # unpickle preprocessed data (articles)
 rootpath = Path.cwd()
-openfile = open(Path.joinpath(rootpath, r"cnn_articles_dict"), 'rb')
+openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_articles_dict"), 'rb')
 cnn_article_dict = pickle.load(openfile)
 openfile.close()
 
 # unpickle preprocessed data (summaries)
 rootpath = Path.cwd()
-openfile = open(Path.joinpath(rootpath, r"cnn_summaries_dict"), 'rb')
+openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_summaries_dict"), 'rb')
 cnn_summary_dict = pickle.load(openfile)
 openfile.close()
 
 # unpickle total dataframe
 rootpath = Path.cwd()
-openfile = open(Path.joinpath(rootpath, r"cnn_dataframe"), 'rb')
+openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_dataframe"), 'rb')
 cnn_dataframe = pickle.load(openfile)
 openfile.close()
 
@@ -67,6 +66,5 @@ print("average of words per summary: ",wordsS_total_number/cnn_dataframe.shape[0
 print("average of words per sentence in summary: ", wordsS_total_number/sentencesS_total_number)
 
 # average ratio summary / article
-
 
 print("average ratio of (words in summary / words in article)")
