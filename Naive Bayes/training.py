@@ -49,7 +49,8 @@ def create_frame(Dict, attributes):
 
 def stepwsie_select(Dict):
     """Executes forward stepwise selection of features. The features are
-    tested on a separate set from their training data."""
+    tested on a separate set from their training data.
+    All features were used in final model."""
     GaussiNB = GaussianNB() # The classifier
     attributes = ["pos", "rel_pos", "Avg-TF-ISF", "rel_len", "rel_s2s_cohs", "centroid_sim", "named_ent", "main_con"]
     precision = [] # Holds precision values of selected features
