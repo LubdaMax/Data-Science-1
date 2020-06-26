@@ -296,7 +296,7 @@ print(test)
 add_indep(article_dict)
 pickle_save(article_dict)
 
-# Saves the dictionary with independent variables as pikle file
+# opens the dictionary with independent variables as testcase
 rootpath = Path.cwd()
 testopen = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_8_no_overview_notilte_10k"), 'rb')
 idep_dict = pickle.load(testopen)

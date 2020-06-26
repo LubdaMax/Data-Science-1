@@ -282,7 +282,7 @@ def add_indep(Dict):
 def pickle_save(Dict):
     """Saves the file in pikle format"""
     rootpath = Path.cwd()
-    outfile = open(Path.joinpath(rootpath, r"cnn_indep_8_10k"), 'wb')
+    outfile = open(Path.joinpath(rootpath, r"Naive Bayes\cnn_indep_8_10k"), 'wb')
     pickle.dump(Dict, outfile)
     outfile.close()
 
@@ -300,8 +300,8 @@ print(test)
 add_indep(article_dict)
 pickle_save(article_dict)
 
-# Saves the dictionary with independent variables as pikle file
+# Opens the dictionary with independent variables as testcase
 rootpath = Path.cwd()
-testopen = open(Path.joinpath(rootpath, r"cnn_indep_8_10k"), 'rb')
+testopen = open(Path.joinpath(rootpath, r"Naive Bayes\cnn_indep_8_10k"), 'rb')
 idep_dict = pickle.load(testopen)
 print(idep_dict["Article200"])
