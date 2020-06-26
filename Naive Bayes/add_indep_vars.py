@@ -14,6 +14,8 @@ import spacy
 # Filepath which reads a dictionary consisting of the Wikihow articles. Each article is part of a Pandas Dataframe which has 
 # one row per sentence. The first column ("sentence") holds the sentences as strings. 
 # The second column ("in_Summary")holds the dependent binary variable which is 1, if a sentence is in the provided summary, zero otherwise.
+# This file adds all requiered independent variables for classification to the dataframes
+# of the Wikihow dataset.
 rootpath = Path.cwd()
 filename = Path.joinpath(rootpath, r"Wikihow\wiki_data_processed_no_overview_notitle_10k")
 infile = open(filename,'rb')
@@ -95,17 +97,7 @@ def TF_ISF(Dataframe):
 
         sentences.iloc[s, 4] = Avg_TF_ISF
 
-    # Normalize Score
-    """
-    maximum = sentences["Avg-TF-ISF"].max()
-    for s in range(num_sentences):
-        sentences.iloc[s, 4] = sentences.iloc[s, 4] / maximum
-    """
     sentences.columns = ["sentence", "TF", "SF", "ISF", "Avg-TF-ISF"]
-    #Dataframe["Sentence"] = sentences["Sentence"]
-    #Dataframe["TF"] = sentences["TF"]
-    #Dataframe["SF"] = sentences["SF"]
-    #Dataframe["ISF"] = sentences["ISF"]
     Dataframe["Avg-TF-ISF"] = sentences["Avg-TF-ISF"]
 
     return Dataframe
@@ -209,7 +201,7 @@ def centroid_similarity_s2s_cohesion(Dataframe):
 def named_entity(Dataframe):
     """Detects whether a sentence has one or more named entitiy. Adds a binary independent 
     variable to the Dataframe.
-     """
+    """
     Dataframe["named_ent"] = ""
     num_sentences = Dataframe.shape[0]
     sp = spacy.load('en_core_web_sm')

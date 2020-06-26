@@ -11,6 +11,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import spacy
 
+
+# Filepath which reads a dictionary consisting of the Wikihow articles. Each article is part of a Pandas Dataframe which has 
+# one row per sentence. The first column ("sentence") holds the sentences as strings. 
+# This file adds all requiered independent variables for classification to the dataframes.
+# This file is very similar to add_indep_vars.py but treats the CNN dataset. The dataset is slightly
+# different sice it holds mo dependent variables used for training.
 rootpath = Path.cwd()
 filename = Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_articles_dict")
 infile = open(filename,'rb')
@@ -26,12 +32,16 @@ for i in range(len(article_dict)):
         print(article_dict["Article{0}".format(i)], (i))
 
 def pos(Dataframe):
+    """Adds the position within the Article as independent variable to the dataframe.
+    """
     Dataframe["pos"] = np.linspace(1, Dataframe.shape[0], Dataframe.shape[0])
 
     return Dataframe
 
 
 def Relative_pos(Dataframe):
+    """Adds the normalized position within the Article as independent variable to the dataframe.
+    """
     Dataframe["rel_pos"] = ""
     num_sentences = Dataframe.shape[0]
 
@@ -42,6 +52,7 @@ def Relative_pos(Dataframe):
 
 
 def TF_ISF(Dataframe):
+    """Adds the Term-Frequency Inverse-Sentence-Frequency as independent variable to the dataframe."""
     sentences = Dataframe["sentence"]
     sentences = sentences.to_frame()
     ps = nltk.stem.PorterStemmer()
@@ -51,8 +62,6 @@ def TF_ISF(Dataframe):
 
     # Word tokenization, stopword removal, stemming
     for sentence in range(num_sentences): 
-        #sentences.iloc[sentence, 0] = sentences.iloc[sentence, 0].translate(string.punctuation)
-        #sentences.iloc[sentence, 0] = nltk.word_tokenize(sentences.iloc[sentence, 0])
         sentences.iloc[sentence, 0] = tokenizer.tokenize(sentences.iloc[sentence, 0])
         
         for i in range(len(sentences.iloc[sentence, 0])):
@@ -60,9 +69,9 @@ def TF_ISF(Dataframe):
 
         sentences.iloc[sentence, 0] = [w for w in sentences.iloc[sentence, 0] if not w in stop]
     #Calculate Term Frequency (within sentence) and Inverse Sentence Frequency
-    sentences["TF"] = ""
-    sentences["SF"] = ""
-    sentences["ISF"] = ""
+    sentences["TF"] = "" # Term Frequency
+    sentences["SF"] = "" # Sentence Frequency
+    sentences["ISF"] = "" # Inverse Sentence Frequency
 
     for i in range(num_sentences):
         sentences.iloc[i, 1] = []
@@ -97,16 +106,13 @@ def TF_ISF(Dataframe):
         sentences.iloc[s, 4] = Avg_TF_ISF
 
     sentences.columns = ["sentence", "TF", "SF", "ISF", "Avg-TF-ISF"]
-    #Dataframe["Sentence"] = sentences["Sentence"]
-    #Dataframe["TF"] = sentences["TF"]
-    #Dataframe["SF"] = sentences["SF"]
-    #Dataframe["ISF"] = sentences["ISF"]
     Dataframe["Avg-TF-ISF"] = sentences["Avg-TF-ISF"]
 
     return Dataframe
 
 
 def rel_s_lenght(Dataframe): 
+    """Adds the normalized lenght of the sentence (in characters) as independent variable to the dataframe."""
     Dataframe["rel_len"] = ""
     num_sentences = Dataframe.shape[0]
     max_words = 0
@@ -122,7 +128,11 @@ def rel_s_lenght(Dataframe):
 
 
 def centroid_similarity_s2s_cohesion(Dataframe):
+    """Adds cohesion beteween sentences and similarity to the centroid as independent variables to the dataframe.
+    The centroid is the average of the vectorized representations of the sentences.
+    """
     def get_vectors(strs):
+        """returns matrix of vectorized sentences"""
         text = strs
         vectorizer = CountVectorizer()
         vectorizer.fit(text)
@@ -130,6 +140,7 @@ def centroid_similarity_s2s_cohesion(Dataframe):
 
 
     def get_cosine_sim(strs): 
+        """Returns matrix of cosine similarities""" 
         vectors = [t for t in get_vectors(strs)]
         return cosine_similarity(vectors)
 
@@ -141,7 +152,7 @@ def centroid_similarity_s2s_cohesion(Dataframe):
     stop = set(stopwords.words("english"))
     tokenizer = nltk.RegexpTokenizer(r'\w+|\d+')
     sentence_list = []
-    # Word tokenization, stopword removal, stemming, return to string
+    # Word tokenization, stopword removal, stemming, return sentences as string in a list to create matrices
     for s in range(num_sentences): 
         sentences.iloc[s, 0] = tokenizer.tokenize(sentences.iloc[s, 0])
         
@@ -158,24 +169,29 @@ def centroid_similarity_s2s_cohesion(Dataframe):
         sentence_string = sentence_string[:-1]
         sentence_string += "."
         sentence_list.append(sentence_string)
-    
+
+    # Create Cosine Matrix
     cosine_matrix = get_cosine_sim(sentence_list)
-    
+
+    # Calculate similarity between sentence s and all other sentences in the document.
     cohesions = np.array([])
     for s in range(num_sentences):
         cohesion = sum(cosine_matrix[:, s]) - 1
         cohesions = np.append(cohesions, cohesion)
 
+    # Normalize value
     rel_cohesions = cohesions / cohesions.max()
     Dataframe["rel_s2s_cohs"] = rel_cohesions
 
+    # Create the centroid
     vector_matrix = get_vectors(sentence_list)
     centroid = np.zeros(len(vector_matrix[0]))
     for i in vector_matrix:
         centroid += i
     centroid = centroid/len(vector_matrix)
+    # create matrix with centroid ontop and calculate cosine similarities for sentences with centroid
+    # Normalize the value
     centroid_matrix = np.vstack((centroid, vector_matrix))
-    #print(centroid_matrix)
     centroid_cosine_matirx = cosine_similarity(centroid_matrix)
 
     centroid_similarity = []
@@ -185,12 +201,13 @@ def centroid_similarity_s2s_cohesion(Dataframe):
     
     Dataframe["centroid_sim"] = centroid_similarity
     
-    # Drop title from Frame
-    # Dataframe = Dataframe.drop(index=[0]) no more title in data
     return Dataframe
         
 
 def named_entity(Dataframe):
+    """Detects whether a sentence has one or more named entitiy. Adds a binary independent 
+    variable to the Dataframe.
+    """
     Dataframe["named_ent"] = ""
     num_sentences = Dataframe.shape[0]
     sp = spacy.load('en_core_web_sm')
@@ -207,13 +224,16 @@ def named_entity(Dataframe):
 
 
 def main_concept(Dataframe):
+    """Detects whether a sentence has one of the 15 (or less for small articles)
+    most frequent nouns in it. Adds binary independent variable to the Dataframe."""
     Dataframe["main_con"] = ""
     num_sentences = Dataframe.shape[0]
     sp = spacy.load('en_core_web_sm')
-    nouns = {}
-    main_concepts = []
+    nouns = {} # dict of all nouns
+    main_concepts = [] # list of most frequent noun
     noun_tags = ["NNP", "NN", "NNPS", "NNS"]
     
+    # Counts frequency of all nouns
     for s in range(num_sentences):
         sentence = sp(Dataframe.iloc[s, 0])
         for token in sentence:
@@ -224,12 +244,15 @@ def main_concept(Dataframe):
                     nouns[token.lemma_] += 1
             else:
                 pass
-    
+
+    # Adds most frequent nouns to list
     for w in range(min(int(len(nouns)*0.3), 15)):
         top_word = max(nouns, key=nouns.get)
         main_concepts.append(top_word)
         del nouns[top_word]
 
+    # Adds one, if most frequent noun in the sentence
+    # zero otherwise.
     for s in range(num_sentences):
         sentence = sp(Dataframe.iloc[s, 0])
         for token in sentence:
@@ -242,8 +265,8 @@ def main_concept(Dataframe):
     return Dataframe
     
 
-
 def add_indep(Dict):
+    """Adds the indep. variables to the dataframes in the dictrionary."""
     for i in range(len(Dict)):
         Dict["Article{0}".format(i)] = pos(Dict["Article{0}".format(i)])
         Dict["Article{0}".format(i)] = Relative_pos(Dict["Article{0}".format(i)])
@@ -257,12 +280,14 @@ def add_indep(Dict):
 
 
 def pickle_save(Dict):
+    """Saves the file in pikle format"""
     rootpath = Path.cwd()
     outfile = open(Path.joinpath(rootpath, r"cnn_indep_8_10k"), 'wb')
     pickle.dump(Dict, outfile)
     outfile.close()
 
 
+# test cases
 """
 test = pos(article_dict["Article0"])
 test = Relative_pos(article_dict["Article0"])
@@ -271,11 +296,11 @@ test = rel_s_lenght(article_dict["Article0"])
 print(test)
 """
 
-
+# Executes the addition of indep. variables for the whole dictionary
 add_indep(article_dict)
 pickle_save(article_dict)
 
-
+# Saves the dictionary with independent variables as pikle file
 rootpath = Path.cwd()
 testopen = open(Path.joinpath(rootpath, r"cnn_indep_8_10k"), 'rb')
 idep_dict = pickle.load(testopen)
