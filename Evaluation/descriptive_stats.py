@@ -30,15 +30,15 @@ open_cnn_summ = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\cnn_summarie
 cnn_summary = pickle.load(open_cnn_summ)
 open_cnn_summ.close()
 
-open_wiki_summ = open(Path.joinpath(rootpath, r"Wikihow\wiki_partial_summaries_10k"), 'rb')
+open_wiki_summ = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\wiki_partial_summaries_10k"), 'rb')
 wiki_summary = pickle.load(open_wiki_summ)
 open_wiki_summ.close()
 
-open_wiki = open(Path.joinpath(rootpath, r"Wikihow\wiki_data_indep_8_no_overview_notilte_10k"), 'rb')
+open_wiki = open(Path.joinpath(rootpath, r"Naive Bayes\wiki_data_indep_8_no_overview_notilte_10k"), 'rb')
 wiki_data = pickle.load(open_wiki)
 open_wiki.close()
 
-open_cnn_article = open(Path.joinpath(rootpath, r"cnn_indep_8_10k"), 'rb')
+open_cnn_article = open(Path.joinpath(rootpath, r"Naive Bayes\cnn_indep_8_10k"), 'rb')
 cnn_data = pickle.load(open_cnn_article)
 open_cnn_article.close()
 
@@ -51,11 +51,11 @@ cnn_bayes_summary = pickle.load(open_cnn_bayes_summary)
 open_cnn_bayes_summary.close()
 
 
-open_wiki_lex_summary = open(Path.joinpath(rootpath, r"LexRank\wiki_TRoutput_summ_dict"), 'rb')
+open_wiki_lex_summary = open(Path.joinpath(rootpath, r"TextRank\wiki_TRoutput_summ_dict"), 'rb')
 wiki_lex_summary = pickle.load(open_wiki_lex_summary)
 open_wiki_lex_summary.close()
 
-open_cnn_lex_summary = open(Path.joinpath(rootpath, r"LexRank\cnn_TRoutput_summ_dict"), 'rb')
+open_cnn_lex_summary = open(Path.joinpath(rootpath, r"TextRank\cnn_TRoutput_summ_dict"), 'rb')
 cnn_lex_summary = pickle.load(open_cnn_lex_summary)
 open_cnn_lex_summary.close()
 
