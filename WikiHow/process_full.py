@@ -10,6 +10,7 @@ import pickle
 # This section reads in the large csv file and uses the first 10k 
 # paragraphs to create a pikle file containing the raw data used for our
 # project.
+# Get data: https://github.com/mahnazkoupaee/WikiHow-Dataset
 """
 rootpath = Path.cwd()
 filepath = Path.joinpath(rootpath, r"Wikihow\wikihowSep.csv")
