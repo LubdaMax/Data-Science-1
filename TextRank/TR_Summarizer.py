@@ -19,7 +19,7 @@ import tensorflow as tf
 
 
 ## indicat what dataset is processed: cnn or wikihow
-dataset = "wikihow"
+dataset = "cnn"
 rootpath = Path.cwd()
 
 
@@ -39,20 +39,15 @@ if dataset == "cnn":
 elif dataset == "wikihow":
 
     # unpickle preprocessed data (articles)
-    openfile = open(Path.joinpath(rootpath, r"Wikihow\partial_data_processed_no_overview_notitle_1col"), 'rb')
+    openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\partial_data_processed_no_overview_notitle_1col"), 'rb')
     data = pickle.load(openfile)
     openfile.close()
 
     # unpickle preprocessed data (summaries)
-    openfile = open(Path.joinpath(rootpath, "Wikihow\wiki_partial_summaries"), 'rb')
+    openfile = open(Path.joinpath(rootpath, r"Pre-Processing & EDA\wiki_partial_summaries"), 'rb')
     summaries = pickle.load(openfile)
     openfile.close()
 
-
-desired_width = 320
-pd.set_option('display.width', desired_width)
-np.set_printoptions(linewidth=desired_width)
-pd.set_option('display.max_columns', 5)
 
 
 def remove_punctuation(text):
@@ -69,6 +64,8 @@ def remove_punctuation(text):
 
 
 def remove_numbers(text):
+    """" removes digital characters from string
+    """
     remove_digits = str.maketrans('', '', digits)
     text = text.translate(remove_digits)
 
@@ -110,7 +107,7 @@ def remove_stopwords(text):
 
 
 def apply_lemmatization(text):
-    """
+    """ reduces every word in input string to a root form that exists in language
         """
     lemmatizer = WordNetLemmatizer()
     text_words_tokenized = word_tokenize(text)
@@ -125,7 +122,7 @@ def apply_lemmatization(text):
 
 
 def apply_stemming(text):
-    """
+    """ reduces every word in input string to their root forms, word might not exist
         """
     porter = PorterStemmer()
     text_words_tokenized = word_tokenize(text)
@@ -140,8 +137,7 @@ def apply_stemming(text):
 
 
 def bag_of_words(article):
-    """
-
+    """ returns a dictionary, where every key represents a word in teh text and the value the frequency of occurence
     :param article: article as a dataframe with one column, where each row represents 1 sentence
     :return: one dictionary : {wordA:frequency}
     """
@@ -175,7 +171,6 @@ def vector_representation(article, word_frequency):
             else:
                 sentence_vector.append(0)
         article_vectors.append(sentence_vector)
-    #article_matrix = pd.DataFrame(article_vectors, columns=word_vector)
 
     return article_vectors
 
@@ -187,17 +182,16 @@ def graph_representation (vector_representation):
     #normalize matrix
     normalized_matrix = TfidfTransformer().fit_transform(matrix_representation)
     similarity_graph = normalized_matrix * normalized_matrix.T
-    #similarity_graph = similarity_graph.toarray()
 
 
     return similarity_graph
 
 
 def pagerank (similarity_graph):
-    """" PageRank computes a ranking of the nodes in the graph G based on the structure of the incoming links. Scores are then sorted.
+    """" PageRank computes a ranking of the nodes in the graph G based on the structure of the incoming links.
+        Scores are returned sorted.
         """
     pagerank_graph = nx.from_scipy_sparse_matrix(similarity_graph) #An adjacency matrix representation of the graph
-    print(pagerank_graph)
     scores = nx.pagerank(pagerank_graph)
     scores_sorted = sorted(scores.items(), key=lambda x: x[1], reverse=True)    #Ausgabe als Liste mit Tupels
 
@@ -205,6 +199,13 @@ def pagerank (similarity_graph):
 
 
 def generate_output_summ(ranked_sentences_dict, article_key, article_data, number_sentences):
+    """ generates summary of a specified number of sentences
+    :param ranked_sentences_dict: scores ranking all sentences in a text
+    :param article_key: Identifier of article
+    :param article_data: all articles as dataframe
+    :param number_sentences:
+    :return:
+    """
     output_summary = []
     for i in range(number_sentences):
         s = ranked_sentences_dict[article_key][i][0]
@@ -227,8 +228,8 @@ for article in data.keys():
         #data[article].iloc[sentence, 1] = remove_numbers(data[article].iloc[sentence, 1])
         data[article].iloc[sentence, 1] = remove_punctuation(data[article].iloc[sentence, 1])
         data[article].iloc[sentence, 1] = remove_stopwords(data[article].iloc[sentence, 1])
-        #data[article].iloc[sentence, 1] = apply_lemmatization(data[article].iloc[sentence, 1])
-        data[article].iloc[sentence, 1] = apply_stemming(data[article].iloc[sentence, 1])
+        data[article].iloc[sentence, 1] = apply_lemmatization(data[article].iloc[sentence, 1])
+        #data[article].iloc[sentence, 1] = apply_stemming(data[article].iloc[sentence, 1])
 
 
 # APPLY ALGORITHM
@@ -245,40 +246,31 @@ for key in data.keys():
     keyS = "Summary" + countStr
     article_frequency_dict[key] = bag_of_words(data[key])
     article_vector_dict[key] = vector_representation(data[key][1], article_frequency_dict[key])
-    print(article_vector_dict[key])
     if not article_vector_dict[key] == []:
         ranking_dict[key] = pagerank((graph_representation(article_vector_dict[key])))
         try:
-            TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 7))
-        except:
             TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 3))
+        except:
+            TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 2)) ##needed for longer summaries
 
     else:
         ranking_dict[key] = [(0,0)]
         TRoutput_summ_dict[keyS] = pd.DataFrame(generate_output_summ(ranking_dict, key, data, 0))
         print("Achtung, leerer Eintrag?")
-        print(ranking_dict[key])
-        print(TRoutput_summ_dict[keyS])
-        print(data[key])
     count += 1
 
 
-#print(ranking_dict)
-#print(TRoutput_summ_dict)
-
-print(TRoutput_summ_dict)
 
 # SAVE FILES WITH OUTPUTS
-
 if dataset == "cnn":
 
     ## CNN / save summaries
-    filename = r"LexRank\cnn_TRoutput_summ_dict_stemm_3sent_inclDigits"
+    filename = r"TextRank\cnn_TRoutput_summ_dict_lemm_3sent_inclDigits"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(TRoutput_summ_dict, outfile)
     outfile.close()
 
-    filename = r"LexRank\cnn_TRoutput_ranking_dict_stemm_3sent_inclDigits"
+    filename = r"TextRank\cnn_TRoutput_ranking_dict_lemm_3sent_inclDigits"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(ranking_dict, outfile)
     outfile.close()
@@ -287,58 +279,24 @@ if dataset == "cnn":
 elif dataset == "wikihow":
 
     ## WIKIHOW / save summaries
-    filename = r"LexRank\wiki_TRoutput_summ_dict_stemm_3sent_inclDigits"
+    filename = r"TextRank\wiki_TRoutput_summ_dict_lemm_3sent_inclDigits"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(TRoutput_summ_dict, outfile)
     outfile.close()
 
-    filename = r"LexRank\wiki_TRoutput_ranking_dict_stemm_3sent_inclDigits"
+    filename = r"TextRank\wiki_TRoutput_ranking_dict_lemm_3sent_inclDigits"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(ranking_dict, outfile)
     outfile.close()
 
 
+#Testcase
 
-### CALLING TR on any Text:
-def use_TR(text, len_summary):
-    """
+print("Artikel: ", data["Article3"])
+print("Reference Summary: ", summaries["Summary3"])
+print("Generated Summary: ", TRoutput_summ_dict["summary3"])
 
-    :param text:
-    :return:
-    """
 
-    text_tokenized = nltk.sent_tokenize(text)
-    if len(text_tokenized) < len_summary:
-        return "Fehler bei der Eingabe, Zusammenfassung soll länger als Text sein"
-    else:
-
-        for i in range(len(text_tokenized)):
-            text_tokenized[i] = text_tokenized[i].lower()
-            text_tokenized[i] = remove_stopwords(text_tokenized[i])
-            text_tokenized[i] = remove_punctuation(text_tokenized[i])
-            #text_tokenized[i] = apply_lemmatization(text_tokenized[i])
-            text_tokenized[i] = apply_stemming(text_tokenized[i])
-
-        text_df = pd.DataFrame(text_tokenized)
-
-        word_frequency = bag_of_words(text_df)
-        text_vector = vector_representation(text_df, word_frequency)
-        sentence_ranking = pagerank((graph_representation(text_vector)))
-
-        summary = []
-
-        count = 0
-        for i in sentence_ranking.keys():
-            if count == len_summary:
-                break
-            else:
-                summary.append(text_df[0,i])
-                summary.append(" ")
-                count += 1
-
-        output_summary = " ".join(summary)
-
-    return output_summary
 
 
 
