@@ -224,11 +224,11 @@ for article in data.keys():
     data[article][1] = 0
     for sentence in range(len(data[article])):
         data[article].iloc[sentence, 1] = data[article].iloc[sentence, 0].lower()
-        data[article].iloc[sentence, 1] = remove_numbers(data[article].iloc[sentence, 1])
+        #data[article].iloc[sentence, 1] = remove_numbers(data[article].iloc[sentence, 1])
         data[article].iloc[sentence, 1] = remove_punctuation(data[article].iloc[sentence, 1])
         data[article].iloc[sentence, 1] = remove_stopwords(data[article].iloc[sentence, 1])
-        data[article].iloc[sentence, 1] = apply_lemmatization(data[article].iloc[sentence, 1])
-        #data[article].iloc[sentence, 1] = apply_stemming(data[article].iloc[sentence, 1])
+        #data[article].iloc[sentence, 1] = apply_lemmatization(data[article].iloc[sentence, 1])
+        data[article].iloc[sentence, 1] = apply_stemming(data[article].iloc[sentence, 1])
 
 
 # APPLY ALGORITHM
@@ -273,12 +273,12 @@ print(TRoutput_summ_dict)
 if dataset == "cnn":
 
     ## CNN / save summaries
-    filename = r"LexRank\cnn_TRoutput_summ_dict_lemma_3sent"
+    filename = r"LexRank\cnn_TRoutput_summ_dict_stemm_3sent_inclDigits"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(TRoutput_summ_dict, outfile)
     outfile.close()
 
-    filename = r"LexRank\cnn_TRoutput_ranking_dict_lemma_3sent"
+    filename = r"LexRank\cnn_TRoutput_ranking_dict_stemm_3sent_inclDigits"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(ranking_dict, outfile)
     outfile.close()
@@ -287,12 +287,12 @@ if dataset == "cnn":
 elif dataset == "wikihow":
 
     ## WIKIHOW / save summaries
-    filename = r"LexRank\wiki_TRoutput_summ_dict_lemma_3sent"
+    filename = r"LexRank\wiki_TRoutput_summ_dict_stemm_3sent_inclDigits"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(TRoutput_summ_dict, outfile)
     outfile.close()
 
-    filename = r"LexRank\wiki_TRoutput_ranking_dict_lemma_3sent"
+    filename = r"LexRank\wiki_TRoutput_ranking_dict_stemm_3sent_inclDigits"
     outfile = open(Path.joinpath(rootpath, filename), 'wb')
     pickle.dump(ranking_dict, outfile)
     outfile.close()
