@@ -9,10 +9,10 @@ import nltk
 from nltk.tokenize import sent_tokenize, word_tokenize
 
 
-# cnn_source_path = r"C:\Users\Leni\Desktop\cnn\stories_all"
-# cnn_save_path = r"C:\Users\Leni\Google Drive\00_Studium\01_Master WI Goethe\01_Veranstaltungen\SS20_DS_Data Science 1\DS Project\NLP _Text Summarizer\CNN"
-#
-# # select 1000 files randomly
+# # select 1000 files randomly and save to another folder
+# cnn_source_path = r""
+# cnn_save_path = r""
+
 # files = os.listdir(cnn_source_path)
 # random_files = np.random.choice(files, 1000)
 # # save 1000 randomly selected files to shared folder (github)
@@ -22,7 +22,6 @@ from nltk.tokenize import sent_tokenize, word_tokenize
 
 
 # Relative path of dataset
-#os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
 rootpath = Path.cwd()
 cnn_path = Path.joinpath(rootpath, r"CNN")
 
@@ -31,7 +30,7 @@ cnn_data = pd.DataFrame(columns=["filename","text_raw", "text_prep", "summary"],
 cnn_data = cnn_data.fillna("nan")
 
 
-
+# save articles from txt files to dataframe
 count = 0
 for entry in os.scandir(cnn_path):
     if count != 1000:
@@ -47,6 +46,7 @@ for entry in os.scandir(cnn_path):
 
 
 
+# make texts usable for tokenization etc, remove unnecessary information
 to_drop = []
 
 for i in range(cnn_data.shape[0]):
@@ -60,9 +60,8 @@ for i in range(cnn_data.shape[0]):
         to_drop.append(i)
 
 
-    #print(cnn_data.iloc[i, 2])
 
-    # extract highlighted sentenced from text as summary of the text
+# extract highlighted sentenced from text as summary of the text
     sentences = []
     summary = []
     article = cnn_data.iloc[i, 2]
@@ -93,23 +92,18 @@ for i in range(cnn_data.shape[0]):
     #print('article ', cnn_data.iloc[i, 2])
 
 
-
-
-
+# drop empty texts
 cnn_data.drop(cnn_data.index[to_drop], inplace=True)
 cnn_data = cnn_data.reset_index(drop=True)
 
 
 
 ## save Articles and Summaries in Dictionary, having a dataframe as item which contains one row per sentence
-
 cnn_article_dict = {}
 for i in range(cnn_data.shape[0]):
     key = "Article" + str(i)
     cnn_article_dict[key] = pd.DataFrame(cnn_data.iloc[i, 2])
 
-print(cnn_article_dict)
-print(cnn_article_dict["Article0"].iloc[0,0])
 
 
 cnn_summary_dict = {}
@@ -123,8 +117,6 @@ cnn_summary_dataframe = cnn_data.iloc[i, 3]
 
 
 
-os.chdir("C:/Users/Leni/Google Drive/00_Studium/01_Master WI Goethe/01_Veranstaltungen/SS20_DS_Data Science 1/DS Project/NLP _Text Summarizer/")
-rootpath = Path.cwd()
 
 # save outputs
 filename = r"Pre-Processing & EDA\cnn_articles_dict"
@@ -150,9 +142,12 @@ outfile.close()
 
 
 
+# Testcases
+print("Artikel: ", cnn_data.iloc[3,2])
+
+print("Summary: ", cnn_data.iloc[3,3])
 
 
-
-
+print("Datenstruktur: ", cnn_article_dict["Article3"])
 
 
